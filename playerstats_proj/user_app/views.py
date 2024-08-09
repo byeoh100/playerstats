@@ -22,7 +22,7 @@ class Sign_Up(APIView):
         data['username'] = request.data.get('username', request.data.get('email'))
 
         try:
-            new_user = User.objects.create_user(**data)
+            new_user = User.objects.create_user(**data) # make further changes on data to make sure that abstract user class fields are not unintentionally wrong
             token = Token.objects.create(user=new_user)
             Fav_player.objects.create(user=new_user)
             Fav_team.objects.create(user=new_user)
