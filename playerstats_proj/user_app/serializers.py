@@ -4,6 +4,7 @@ from .models import User
 from fav_player_app.serializers import FavPlayerSerializer
 from fav_team_app.serializers import FavTeamSerializer
 from fantasy_team_app.serializers import FantasyTeamSerializer
+from post_app.serializers import PostSerializer
 
 class UserInfoSerializer(serializers.ModelSerializer):
     fav_player = FavPlayerSerializer()
@@ -12,4 +13,4 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['display_name', 'email', 'fav_player', 'fav_team', 'fantasy_team']
+        fields = ['display_name', 'email', 'fav_player', 'fav_team', 'fantasy_team', 'posts']
