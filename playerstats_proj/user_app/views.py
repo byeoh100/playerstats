@@ -20,6 +20,8 @@ class Sign_Up(APIView):
     def post(self, request):
         data = request.data.copy()
         data['username'] = request.data.get('username', request.data.get('email'))
+        data['is_staff'] = False
+        data['is_active'] = True
 
         try:
             new_user = User.objects.create_user(**data) # make further changes on data to make sure that abstract user class fields are not unintentionally wrong
