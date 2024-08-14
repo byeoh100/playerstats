@@ -61,3 +61,7 @@ class Info(TokenReq):
     def get(self, request):
         user_info = UserInfoSerializer(request.user, partial=True)
         return Response(user_info.data, status=HTTP_200_OK)
+    
+class Test_Conn(APIView):
+    def get(self, request):
+        return Response('Successful connection', status=HTTP_200_OK)

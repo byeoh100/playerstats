@@ -1,11 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './AuthPopup.css';
+import Form from "react-bootstrap/Form"
+import { useOutletContext } from 'react-router-dom';
+import { signIn, signUp } from '../utilities';
 
-function AuthPopup({ onClose }) {
-    const [isLogin, setIsLogin] = useState(true);
+function AuthPopup({ onClose, setUser }) {
+    const [isLogin, setIsLogin] = useState(true)
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("")
 
     const toggleForm = () => {
         setIsLogin(!isLogin);
+    };
+
+    const handleSignUp = async (e) => {
+        setUser(await signUp(email, password));
+    };
+
+    const handleSignIn = async (e) => {
+        e.preventDefault()
+        setUser(await signIn(email, password));
     };
 
     return (
@@ -14,29 +28,72 @@ function AuthPopup({ onClose }) {
                 <button className="close-btn" onClick={onClose}>X</button>
                 {isLogin ? (
                     <div className="login-form">
-                        <h2>Log in to your account</h2>
-                        <input type="email" placeholder="Email address" />
-                        <input type="password" placeholder="Password" />
-                        <div className="remember-me">
-                            <input type="checkbox" id="rememberMe" />
-                            <label htmlFor="rememberMe">Remember me</label>
-                        </div>
-                        <button className="forgot-password">Forgot password?</button>
-                        <button className="auth-btn">Log in</button>
-                        <p>Don’t have an account? <span onClick={toggleForm} className="toggle-link">Sign up for free</span></p>
+                        <h3>Log in to your account</h3>
+                        <Form onSubmit={(e) => handleSignIn(e)}>
+                            <Form.Group className="mb-3 mt-3" controlId="formBasicEmail">
+                                <Form.Control
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    value={email}
+                                    type="email"
+                                    placeholder="Email address"
+                                />
+                            </Form.Group>
+                            <Form.Group className="mb-3" controlId="formBasicPassword">
+                                <Form.Control
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    value={password}
+                                    type="password"
+                                    placeholder="Password"
+                                />
+                            </Form.Group>
+                            <Form.Group className="remember-me" controlId="formBasicCheckbox">
+                                <Form.Check
+                                    type="checkbox"
+                                    label="Remember me"
+                                    className="mb-0"
+                                />
+                                <button className="forgot-password">Forgot password?</button>
+                            </Form.Group>
+                            <button className="auth-btn" type="submit">Log in</button>
+                            <p>Don't have an account? <span onClick={toggleForm} className="toggle-link">Sign up for free</span></p>
+                        </Form>
                     </div>
                 ) : (
                     <div className="signup-form">
-                        <h2>Create an account</h2>
-                        <input type="email" placeholder="Email address" />
-                        <input type="password" placeholder="Password" />
-                        <input type="password" placeholder="Confirm password" />
-                        <div className="newsletter">
-                            <input type="checkbox" id="newsletter" />
-                            <label htmlFor="newsletter">Keep up to date with notifications on tracked teams</label>
-                        </div>
-                        <button className="auth-btn">Sign up for free</button>
-                        <p>Already have an account? <span onClick={toggleForm} className="toggle-link">Log in</span></p>
+                        <h3>Create an account</h3>
+                        <Form onSubmit={(e) => handleSignUp(e)}>
+                            <Form.Group className="mb-3 mt-3" controlId="formBasicEmail">
+                                <Form.Control
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    value={email}
+                                    type="email"
+                                    placeholder="Email address"
+                                />
+                            </Form.Group>
+                            <Form.Group className="mb-3" controlId="formBasicPassword">
+                                <Form.Control
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    value={password}
+                                    type="password"
+                                    placeholder="Password"
+                                />
+                            </Form.Group>
+                            {/* <Form.Group className="mb-3" controlId="formBasicPassword">
+                                <Form.Control
+                                    type="password"
+                                    placeholder="Confirm Password"
+                                />
+                            </Form.Group> */}
+                            <Form.Group className="newsletter" controlId="formBasicCheckbox">
+                                <Form.Check
+                                    type="checkbox"
+                                    label="Stay up to date with email notifications"
+                                    className="mb-0"
+                                />
+                            </Form.Group>
+                            <button className="auth-btn" type="submit">Sign up for free</button>
+                            <p>Already have an account? <span onClick={toggleForm} className="toggle-link">Log in</span></p>
+                        </Form>
                     </div>
                 )}
             </div>

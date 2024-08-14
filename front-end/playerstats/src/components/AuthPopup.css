@@ -17,9 +17,6 @@
     border-radius: 10px;
     width: 400px;
     position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
 }
 
 .close-btn {
@@ -33,8 +30,8 @@
     color: black;
 }
 
-h2 {
-    margin-bottom: 20px;
+h3 {
+    margin-bottom: 40px;
 }
 
 input {
@@ -64,14 +61,30 @@ input {
 .remember-me, .newsletter {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     margin-bottom: 20px;
 }
 
 .forgot-password {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: none;
     border: none;
     color: #1a3365;
     cursor: pointer;
-    margin-bottom: 20px;
     text-align: right;
+}
+
+.form-check {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0px;
+}
+
+.form-check-label {
+    margin-top: 1.5px;
+    margin-left: 5px;
+    font-size: inherit;
 }

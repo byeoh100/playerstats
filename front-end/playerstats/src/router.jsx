@@ -6,11 +6,13 @@ import GetPlayer from "./pages/GetPlayer"
 import GetTeam from "./pages/GetTeam"
 import Community from "./pages/Community"
 import Profile from "./pages/Profile"
+import { confirmUser } from "./utilities"
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <App />,
+        loader: confirmUser,
         children: [
             {
                 index: true,
