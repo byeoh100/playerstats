@@ -49,13 +49,13 @@ function NavSearch({ user, setUser }) {
                         <Navbar.Toggle aria-controls="navbarScroll" />
                         <Navbar.Collapse id="navbarScroll">
                             <Nav className="me-auto my-2 my-lg-0">
-                                <Nav.Link as={Link} to="/get-stats" style={{ color: "white" }}>
-                                    Player
+                                <Nav.Link as={Link} to="/players" style={{ color: "white" }}>
+                                    Players
                                 </Nav.Link>
-                                <Nav.Link as={Link} to="/compare-stats" style={{ color: "white" }}>
-                                    Team
+                                <Nav.Link as={Link} to="/teams" style={{ color: "white" }}>
+                                    Teams
                                 </Nav.Link>
-                                <Nav.Link style={{ color: "white" }}>
+                                <Nav.Link as={Link} to="/community" style={{ color: "white" }}>
                                     Community
                                 </Nav.Link>
                             </Nav>
@@ -68,7 +68,7 @@ function NavSearch({ user, setUser }) {
                                 />
                                 <Button variant="outline-success">Search</Button>
                             </Form>
-                            <Dropdown align="end">
+                            <Dropdown className='mx-3'>
                                 <Dropdown.Toggle as="div" id="dropdown-custom-components">
                                     <Image
                                         src={!user ? "./src/assets/avatar.jpg" : "./src/assets/loggedinuser.jpg"}
@@ -86,7 +86,7 @@ function NavSearch({ user, setUser }) {
                                     </Dropdown.Menu>
                                     :
                                     <Dropdown.Menu>
-                                        <Dropdown.Item>Profile</Dropdown.Item>
+                                        <Dropdown.Item as={Link} to="/profile">Profile</Dropdown.Item>
                                         <Dropdown.Item onClick={async () => setUser(await handleLogOut())}>Logout</Dropdown.Item>
                                     </Dropdown.Menu>
                                 }
@@ -95,7 +95,7 @@ function NavSearch({ user, setUser }) {
                     </Container>
                 </Navbar>
             </Container>
-            {isPopupOpen && <AuthPopup onClose={closePopup} setUser={setUser} />}
+            {isPopupOpen && <AuthPopup onClose={closePopup} setUser={setUser} user={user} />}
         </>
     );
 }

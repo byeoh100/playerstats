@@ -4,7 +4,7 @@ import Form from "react-bootstrap/Form"
 import { useOutletContext } from 'react-router-dom';
 import { signIn, signUp } from '../utilities';
 
-function AuthPopup({ onClose, setUser }) {
+function AuthPopup({ onClose, setUser, user }) {
     const [isLogin, setIsLogin] = useState(true)
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("")
@@ -14,12 +14,15 @@ function AuthPopup({ onClose, setUser }) {
     };
 
     const handleSignUp = async (e) => {
-        setUser(await signUp(email, password));
+        e.preventDefault()
+        setUser(await signUp(email, password))
+        window.location.reload()
     };
 
     const handleSignIn = async (e) => {
         e.preventDefault()
-        setUser(await signIn(email, password));
+        setUser(await signIn(email, password))
+        window.location.reload()
     };
 
     return (

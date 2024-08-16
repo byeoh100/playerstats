@@ -1,0 +1,14 @@
+<svg preserveAspectRatio="none" viewBox="0 0 175 100" xmlns="http://www.w3.org/2000/svg">
+  <polyline 
+    fill="none" 
+    stroke="#dddddd" 
+    stroke-width="1"
+    points="0,100 50,60 100,80 150,20 200,30 250,10 " 
+  />
+  <polyline 
+    fill="none" 
+    stroke="#aaaaaa" 
+    stroke-width="2"
+    points="0,95 50,55 100,75 150,15 200,25 250,5 "
+  />
+</svg>

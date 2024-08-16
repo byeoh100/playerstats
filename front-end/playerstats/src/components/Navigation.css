@@ -1,0 +1,5 @@
+.container-fluid {
+    position: sticky;
+    z-index: 999;
+    top: 0;
+}
