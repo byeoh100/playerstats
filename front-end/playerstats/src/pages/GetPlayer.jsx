@@ -15,6 +15,7 @@ import {
 	Pagination
 } from "react-bootstrap";
 import { CategoryScale } from 'chart.js'
+import { useNavigate } from 'react-router-dom'
 
 function GetPlayer() {
 	const [playerData, setPlayerData] = useState([])
@@ -24,6 +25,10 @@ function GetPlayer() {
 
 	const [playerName, setPlayerName] = useState('')
 	const [players, setPlayers] = useState([])
+	const [pageNum, setPageNum] = useState(1)
+	const [maxPage, setMaxPage] = useState(1)
+	const [season, setSeason] = useState("2023")
+	const navigate = useNavigate()
 
 	const dataPull = {
 		"player_name": "Name",
@@ -47,8 +52,6 @@ function GetPlayer() {
 		"TOV": "TOV",
 		"PTS": "PTS"
 	}
-
-	console.log(players)
 
 	// useEffect(() => {
 	// 	const fetchData = async () => {
@@ -91,20 +94,28 @@ function GetPlayer() {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				let res = await axios.get("https://nba-stats-db.herokuapp.com/api/playerdata/season/2023/?page=1")
-				setPlayers(res.data.results)
+				let res = await axios.get(`https://nba-stats-db.herokuapp.com/api/playerdata/season/${season}/`)
+				let pageCount = Math.ceil(await res.data.count / 100)
+				setMaxPage((pageCount * 2) - 1)
+				let allPlayers = []
+				let page = 1
+				while(page <= pageCount) {
+					let res = await axios.get(`https://nba-stats-db.herokuapp.com/api/playerdata/season/${season}/?page=${page}`)
+					allPlayers = ([...allPlayers, ...res.data.results])
+					page += 1
+				}
+				setPlayers(allPlayers)
 			}
 			catch {
 				console.log("failed")
 			}
 		}
 		fetchData()
-	}, [])
+	}, [season])
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
 		setPlayerName(e.target[0].value)
-		console.log(playerName)
 	}
 
 	return (
@@ -119,23 +130,31 @@ function GetPlayer() {
 						<div className="select-menus">
 							<Form.Group>
 								<Form.Label className="mb-0">Season</Form.Label>
-								<Form.Select>
-									<option>2023-2024</option>
-									<option>2022-2023</option>
+								<Form.Select value={season} onChange={(e) => {setSeason(e.target.value)}}>
+									<option value="2023">2023-2024</option>
+									<option value="2022">2022-2023</option>
+									<option value="2021">2021-2022</option>
+									<option value="2020">2020-2021</option>
+									<option value="2019">2019-2020</option>
+									<option value="2018">2018-2019</option>
+									<option value="2017">2017-2018</option>
+									<option value="2016">2016-2017</option>
+									<option value="2015">2015-2016</option>
+									<option value="2014">2014-2015</option>
 								</Form.Select>
 							</Form.Group>
 							<Form.Group>
 								<Form.Label className="mb-0">Per</Form.Label>
 								<Form.Select>
-									<option>2023-2024</option>
-									<option>2022-2023</option>
+									<option>Game</option>
+									<option>Totals</option>
 								</Form.Select>
 							</Form.Group>
 							<Form.Group>
 								<Form.Label className="mb-0">Sort by</Form.Label>
 								<Form.Select>
-									<option>2023-2024</option>
-									<option>2022-2023</option>
+									<option>Points</option>
+									<option>Alphabetical</option>
 								</Form.Select>
 							</Form.Group>
 						</div>
@@ -148,6 +167,13 @@ function GetPlayer() {
 							/>
 						</Form>
 					</Card>
+					<span>Page {pageNum} of {maxPage}</span>
+					<Pagination className='mt-auto mb-auto'>
+						<Pagination.First onClick={() => setPageNum(1)} disabled={pageNum == 1}/>
+						<Pagination.Prev onClick={() => setPageNum(pageNum - 1)} disabled={pageNum == 1}/>
+						<Pagination.Next onClick={() => setPageNum(pageNum + 1)} disabled={pageNum == maxPage}/>
+						<Pagination.Last onClick={() => setPageNum(maxPage)} disabled={pageNum == maxPage}/>
+					</Pagination>
 					<Card id="stats-table">
 						<Table striped>
 							<thead>
@@ -158,10 +184,10 @@ function GetPlayer() {
 								</tr>
 							</thead>
 							<tbody>
-								{players == null ? undefined : players.map((i) => (
+								{players == null ? undefined : players.slice((pageNum - 1) * 50, pageNum * 50).map((i) => (
 									<tr>
 										{Object.keys(dataPull).map((cat) => (
-											<th>
+											<th onClick={() => navigate(`/players/${i.player_name}`)} style={{cursor: "pointer"}}>
 												{i[cat]}
 											</th>
 										))}

@@ -7,6 +7,8 @@ import GetTeam from "./pages/GetTeam"
 import Community from "./pages/Community"
 import Profile from "./pages/Profile"
 import { confirmUser } from "./utilities"
+import PlayerPage from "./pages/PlayerPage"
+import TeamPage from "./pages/TeamPage"
 
 const router = createBrowserRouter([
     {
@@ -23,8 +25,16 @@ const router = createBrowserRouter([
                 element: <GetPlayer />
             },
             {
+                path: "/players/:name",
+                element: <PlayerPage />
+            },
+            {
                 path: "/teams",
                 element: <GetTeam />
+            },
+            {
+                path: "/teams/:name",
+                element: <TeamPage />
             },
             {
                 path: "/community",

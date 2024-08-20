@@ -3,7 +3,6 @@
     margin-left: auto;
     margin-right: auto;
     width: 90%;
-    height: 90%;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(4, 1fr);
@@ -14,9 +13,37 @@
 
 .stats {
     grid-column: span 2;
+    grid-row: span 2;
 }
 
 .fantasy-team {
     grid-column: span 1;
     grid-row: span 4;
+}
+
+.player-box {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.vertical-line {
+    width: 1px;
+    background-color: #000;
+    height: 8vh !important;
+    margin: 0 !important;
+}
+
+#prof-card {
+    height: fit-content !important;
+    width: 100% !important;
+    margin-right: 3vw !important;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly !important;
+}
+
+.fantasy-team-player {
+    display: flex;
+    flex-direction: row;
 }

@@ -1,0 +1,29 @@
+.player-card {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between;
+    align-items: center;
+    width: 80vw;
+    height: 30vh !important;
+    padding-right: 5vw;
+    padding-left: 2vw;
+}
+
+.basic-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.average-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.vertical-line {
+    width: 1px;
+    background-color: #000;
+    height: 90%;
+    margin: 0 20px;
+}

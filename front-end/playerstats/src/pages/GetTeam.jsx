@@ -4,9 +4,12 @@ import axios from 'axios'
 import { Card } from 'react-bootstrap'
 
 import './GetTeam.css'
+import { useNavigate } from 'react-router-dom'
 
 function GetTeam() {
   const [teams, setTeams] = useState([])
+
+  const navigate = useNavigate()
 
   const apiKey = import.meta.env.VITE_BALLDONTLIE_KEY
 
@@ -27,7 +30,12 @@ function GetTeam() {
     fetchData()
   }, [])
 
-  console.log(teams)
+  let allTeam = teams.map((i) => {
+    if(i.city != "") {
+      return i.full_name
+    }
+  })
+  console.log(allTeam)
 
   return (
     <div className='page'>
@@ -42,7 +50,7 @@ function GetTeam() {
               {teams.map((team) => {
                 if (team.conference == 'West') {
                   return (
-                    <Card className='d-flex align-items-center'>
+                    <Card className='d-flex align-items-center' onClick={() => navigate(`/teams/${team.full_name}`)} style={{cursor: "pointer"}}>
                       <Card.Title>{team.full_name}</Card.Title>
                     </Card>
                   )
@@ -56,7 +64,7 @@ function GetTeam() {
               {teams.map((team) => {
                 if (team.conference == 'East') {
                   return (
-                    <Card className='d-flex align-items-center'>
+                    <Card className='d-flex align-items-center' onClick={() => navigate(`/teams/${team.full_name}`)} style={{cursor: "pointer"}}>
                       <Card.Title>{team.full_name}</Card.Title>
                     </Card>
                   )

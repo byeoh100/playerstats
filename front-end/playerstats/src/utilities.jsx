@@ -1,4 +1,5 @@
-import axios from "axios";
+import axios from "axios"
+import playerData from "./assets/playerdata.json"
 
 export const api = axios.create({
   baseURL: "http://127.0.0.1:8000/api/v1/",
@@ -36,7 +37,7 @@ export const signIn = async (email, password) => {
 
 export const logOut = async () => {
   let response = await api.post("logout/")
-  if(response.status === 204){
+  if (response.status === 204) {
     localStorage.removeItem("token")
     delete api.defaults.headers.common["Authorization"]
     return null
@@ -50,8 +51,29 @@ export const confirmUser = async () => {
     api.defaults.headers.common["Authorization"] = `Token ${token}`;
     let response = await api.get("info/");
     if (response.status === 200) {
-      return response.data.display_name;
+      return response.data;
     }
   }
   return null;
 };
+
+export const makeGList = () => {
+  let list = playerData
+    .filter((i) => i.position.includes('Guard'))
+    .map((i) => i.fname + " " + i.lname)
+  return list
+}
+
+export const makeFList = () => {
+  let list = playerData
+    .filter((i) => i.position.includes('Forward'))
+    .map((i) => i.fname + " " + i.lname)
+  return list
+}
+
+export const makeCList = () => {
+  let list = playerData
+    .filter((i) => i.position.includes('Center'))
+    .map((i) => i.fname + " " + i.lname)
+  return list
+}
