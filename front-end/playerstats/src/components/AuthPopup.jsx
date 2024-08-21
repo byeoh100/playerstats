@@ -12,6 +12,8 @@ function AuthPopup({ onClose, setUser, user }) {
     const [fakeEmail, setFakeEmail] = useState(true)
     const [showFake, setShowFake] = useState(false)
 
+    const apiKey = import.meta.env.EMAIL_CHECK_KEY
+
     const toggleForm = () => {
         setIsLogin(!isLogin);
     };
@@ -20,7 +22,7 @@ function AuthPopup({ onClose, setUser, user }) {
         e.preventDefault()
         let res = await axios.get(`/checkpass/${email}`, {
             headers: {
-                "Authorization": `Bearer xaIFzCi3pw3OlHqGsUJiIYTqCdHtYnHx`
+                "Authorization": `Bearer ${apiKey}`
             }
         })
         setFakeEmail(res.data.disposable)
