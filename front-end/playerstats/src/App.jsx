@@ -16,10 +16,6 @@ function App() {
     test_connection()
   }, [])
 
-  useEffect(() => {
-    console.log(user)
-  }, [user])
-
   return (
     <>
       <Navigation user={user} setUser={setUser}/>

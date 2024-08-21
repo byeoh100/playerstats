@@ -41,7 +41,6 @@ function Profile() {
             setFavPlayerID(playerData[`${favPlayer}`])
             let resPlayer = await axios.get(`/playerapi/PlayerDataTotals/name/${favPlayer}`)
             setFavPlayerInfo(resPlayer.data[resPlayer.data.length - 1])
-            console.log(resPlayer.data[resPlayer.data.length - 1])
             setFavTeam(response.data.fav_team.team)
             setLoading(false)
         }
@@ -77,36 +76,40 @@ function Profile() {
                 <Card className='stats'>
                     <Card.Header id='prof-card'>
                         <img
-                            src={`../src/assets/img/${favPlayerID.playerid}.png`}
+                            src={favPlayerID.playerid != undefined ?
+                                `../src/assets/img/${favPlayerID.playerid}.png`
+                                :
+                                './src/assets/defaultplayer.jpg'
+                            }
                             width="100"
                             height="75"
                         />
                         <div className='basic-stats'>
-                            <Card.Title>{favPlayerInfo.playerName}</Card.Title>
+                            <Card.Title>{favPlayerInfo?.playerName}</Card.Title>
                             <Card.Text>
-                                Age: {favPlayerInfo.age}<br />
-                                Team: {favPlayerInfo.team} ({favPlayerInfo.position})
+                                Age: {favPlayerInfo?.age}<br />
+                                Team: {favPlayerInfo?.team} ({favPlayerInfo?.position})
                             </Card.Text>
                         </div>
                         <div className='vertical-line'></div>
                         <div className='average-stats'>
                             <Card.Text>PTS</Card.Text>
-                            <Card.Title>{(favPlayerInfo.points / favPlayerInfo.games).toFixed(2)}</Card.Title>
+                            <Card.Title>{(favPlayerInfo?.points / favPlayerInfo?.games).toFixed(2)}</Card.Title>
                         </div>
                         <div className='vertical-line'></div>
                         <div className='average-stats'>
                             <Card.Text>REB</Card.Text>
-                            <Card.Title>{(favPlayerInfo.totalRb / favPlayerInfo.games).toFixed(2)}</Card.Title>
+                            <Card.Title>{(favPlayerInfo?.totalRb / favPlayerInfo?.games).toFixed(2)}</Card.Title>
                         </div>
                         <div className='vertical-line'></div>
                         <div className='average-stats'>
                             <Card.Text>AST</Card.Text>
-                            <Card.Title>{(favPlayerInfo.assists / favPlayerInfo.games).toFixed(2)}</Card.Title>
+                            <Card.Title>{(favPlayerInfo?.assists / favPlayerInfo?.games).toFixed(2)}</Card.Title>
                         </div>
                         <div className='vertical-line'></div>
                         <div className='average-stats'>
                             <Card.Text>FG%</Card.Text>
-                            <Card.Title>{(favPlayerInfo.fieldPercent * 100).toFixed(2)}</Card.Title>
+                            <Card.Title>{(favPlayerInfo?.fieldPercent * 100).toFixed(2)}</Card.Title>
                         </div>
                     </Card.Header>
                     <Card.Body>

@@ -87,6 +87,7 @@ function NavSearch({ user, setUser }) {
                                     :
                                     <Dropdown.Menu>
                                         <Dropdown.Item as={Link} to="/profile">Profile</Dropdown.Item>
+                                        <Dropdown.Item as={Link} to="/account">My Account</Dropdown.Item>
                                         <Dropdown.Item onClick={async () => setUser(await handleLogOut())}>Logout</Dropdown.Item>
                                     </Dropdown.Menu>
                                 }

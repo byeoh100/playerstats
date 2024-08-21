@@ -9,6 +9,7 @@ import Profile from "./pages/Profile"
 import { confirmUser } from "./utilities"
 import PlayerPage from "./pages/PlayerPage"
 import TeamPage from "./pages/TeamPage"
+import Account from "./pages/Account"
 
 const router = createBrowserRouter([
     {
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
             {
                 path: "/profile",
                 element: <Profile />
+            },
+            {
+                path: "/account",
+                element: <Account />
             }
         ],
         // errorElement: <Error />

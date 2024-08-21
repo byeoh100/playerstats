@@ -4,11 +4,14 @@ import { Button, Card, Table } from 'react-bootstrap'
 import { api } from '../utilities'
 import axios from 'axios'
 import './TeamPage.css'
+import * as NBAIcons from 'react-nba-logos'
 
 function PlayerPage() {
     const [roster, setRoster] = useState([])
-    const [teamData, setTeamData] = useState({})
+    const [teamData, setTeamData] = useState("DAL")
     const { name } = useParams()
+    
+    const TeamIcon = NBAIcons[teamData]
 
     const teamAbbrev = {
         "Atlanta Hawks": "ATL",
@@ -45,14 +48,15 @@ function PlayerPage() {
 
     const dataPull = {
         "playerName": "Name",
-		"age": "Age",
+        "age": "Age",
         "position": "Position",
         "games": "GP",
-	}
+    }
 
     useEffect(() => {
         const fetchData = async () => {
             let resRoster = await axios.get(`/playerapi/PlayerDataTotals/team/${teamAbbrev[name]}`)
+            setTeamData(resRoster.data[0].team)
             setRoster(resRoster.data.slice(0, 30).filter((i) => i.season == "2023"))
         }
         fetchData()
@@ -72,11 +76,7 @@ function PlayerPage() {
             </div>
             <div className='content'>
                 <Card className='player-card'>
-                    <img
-                        src='../src/assets/defaultplayer.jpg'
-                        width="100"
-                        height="100"
-                    />
+                    <TeamIcon />
                     <div className='basic-stats'>
                         <Card.Title>{name} ({teamAbbrev[name]})</Card.Title>
                     </div>
