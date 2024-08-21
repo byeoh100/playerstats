@@ -12,19 +12,15 @@ import {
 	Col,
 	Form,
 	Carousel,
-	Pagination
+	Pagination,
+	Spinner
 } from "react-bootstrap";
 import { CategoryScale } from 'chart.js'
 import { useNavigate } from 'react-router-dom'
 
 function GetPlayer() {
-	const [playerData, setPlayerData] = useState([])
-	const [averageData, setAverageData] = useState([])
-	const [passAverage, setPassAverage] = useState(true)
-	const [playerTeam, setPlayerTeam] = useState('')
-
 	const [playerName, setPlayerName] = useState('')
-	const [players, setPlayers] = useState([])
+	const [players, setPlayers] = useState(null)
 	const [pageNum, setPageNum] = useState(1)
 	const [maxPage, setMaxPage] = useState(1)
 	const [season, setSeason] = useState("2023")
@@ -53,44 +49,6 @@ function GetPlayer() {
 		"PTS": "PTS"
 	}
 
-	// useEffect(() => {
-	// 	const fetchData = async () => {
-	// 		let firstRes = await axios.get(`https://nba-stats-db.herokuapp.com/api/playerdata/name/${playerName}`)
-	// 		setPlayerTeam(firstRes.data.results[0].team)
-	// 		let formatData = firstRes.data.results.map((i) => {
-	// 			let newDict = {}
-	// 			Object.keys(dataPull).map((key) => {
-	// 				if (key == "field_percent" || key == "three_percent" || key == "ft_percent") {
-	// 					newDict[dataPull[key]] = (i[key] * 100).toFixed(1)
-	// 				}
-	// 				else {
-	// 					newDict[dataPull[key]] = i[key]
-	// 				}
-	// 			})
-	// 			return newDict
-	// 		})
-	// 		setPlayerData(formatData)
-
-	// 		let createAverageData = formatData.map((i) => {
-	// 			let newDict = {}
-	// 			Object.keys(i).map((key) => {
-	// 				if (key != "Season" && key != "GP" && key.includes("%") == false) {
-	// 					newDict[key] = (i[key] / i.GP).toFixed(1)
-	// 				}
-	// 				else {
-	// 					newDict[key] = i[key]
-	// 				}
-	// 			})
-	// 			return newDict
-	// 		})
-	// 		setAverageData(createAverageData)
-	// 	}
-	// 	if (playerName) {
-	// 		setPlayerData([])
-	// 		fetchData()
-	// 	}
-	// }, [playerName])
-
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
@@ -99,7 +57,7 @@ function GetPlayer() {
 				setMaxPage((pageCount * 2) - 1)
 				let allPlayers = []
 				let page = 1
-				while(page <= pageCount) {
+				while (page <= pageCount) {
 					let res = await axios.get(`https://nba-stats-db.herokuapp.com/api/playerdata/season/${season}/?page=${page}`)
 					allPlayers = ([...allPlayers, ...res.data.results])
 					page += 1
@@ -130,7 +88,7 @@ function GetPlayer() {
 						<div className="select-menus">
 							<Form.Group>
 								<Form.Label className="mb-0">Season</Form.Label>
-								<Form.Select value={season} onChange={(e) => {setSeason(e.target.value)}}>
+								<Form.Select value={season} onChange={(e) => { setSeason(e.target.value) }}>
 									<option value="2023">2023-2024</option>
 									<option value="2022">2022-2023</option>
 									<option value="2021">2021-2022</option>
@@ -167,35 +125,41 @@ function GetPlayer() {
 							/>
 						</Form>
 					</Card>
-					<span>Page {pageNum} of {maxPage}</span>
-					<Pagination className='mt-auto mb-auto'>
-						<Pagination.First onClick={() => setPageNum(1)} disabled={pageNum == 1}/>
-						<Pagination.Prev onClick={() => setPageNum(pageNum - 1)} disabled={pageNum == 1}/>
-						<Pagination.Next onClick={() => setPageNum(pageNum + 1)} disabled={pageNum == maxPage}/>
-						<Pagination.Last onClick={() => setPageNum(maxPage)} disabled={pageNum == maxPage}/>
-					</Pagination>
-					<Card id="stats-table">
-						<Table striped>
-							<thead>
-								<tr>
-									{Object.values(dataPull).map((cat) => (
-										<th>{cat}</th>
-									))}
-								</tr>
-							</thead>
-							<tbody>
-								{players == null ? undefined : players.slice((pageNum - 1) * 50, pageNum * 50).map((i) => (
+					{players ? <><span>Page {pageNum} of {maxPage}</span>
+						<Pagination className='mt-auto mb-auto'>
+							<Pagination.First onClick={() => setPageNum(1)} disabled={pageNum == 1} />
+							<Pagination.Prev onClick={() => setPageNum(pageNum - 1)} disabled={pageNum == 1} />
+							<Pagination.Next onClick={() => setPageNum(pageNum + 1)} disabled={pageNum == maxPage} />
+							<Pagination.Last onClick={() => setPageNum(maxPage)} disabled={pageNum == maxPage} />
+						</Pagination>
+						<Card id="stats-table">
+							<Table striped>
+								<thead>
 									<tr>
-										{Object.keys(dataPull).map((cat) => (
-											<th onClick={() => navigate(`/players/${i.player_name}`)} style={{cursor: "pointer"}}>
-												{i[cat]}
-											</th>
+										{Object.values(dataPull).map((cat) => (
+											<th>{cat}</th>
 										))}
 									</tr>
-								))}
-							</tbody>
-						</Table>
-					</Card>
+								</thead>
+								<tbody>
+									{players == null ? undefined : players.slice((pageNum - 1) * 50, pageNum * 50).map((i) => (
+										<tr>
+											{Object.keys(dataPull).map((cat) => (
+												<th onClick={() => navigate(`/players/${i.player_name}`)} style={{ cursor: "pointer" }}>
+													{i[cat]}
+												</th>
+											))}
+										</tr>
+									))}
+								</tbody>
+							</Table>
+						</Card></>
+						:
+						<div className='mt-3 mb-3'>
+							<Spinner animation="border" role="status">
+								<span className="visually-hidden">Loading...</span>
+							</Spinner>
+						</div>}
 				</div>
 			</div>
 		</>

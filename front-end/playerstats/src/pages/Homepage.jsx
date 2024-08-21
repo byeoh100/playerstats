@@ -3,9 +3,17 @@ import './Homepage.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faBars } from '@fortawesome/free-solid-svg-icons'
 import { useOutletContext } from 'react-router-dom';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 
 function Homepage() {
     const { setUser } = useOutletContext()
+
+    const Link = ({ id, children, title }) => (
+        <OverlayTrigger overlay={<Tooltip id={id}>{title}</Tooltip>}>
+            <a href="javascript:void(0);">{children}</a>
+        </OverlayTrigger>
+    );
 
     return (
         <div className="home-page">
@@ -31,13 +39,19 @@ function Homepage() {
                 <h2>Stay up to date with a <strong>custom dashboard</strong></h2>
                 <div className="dashboard-content">
                     <div className="player-tracking">
-                        <h3>Player tracking</h3>
+                        <Link title="Specific player statistics for in-depth analysis." id="t-1">
+                            <h3>Player tracking</h3>
+                        </Link>{' '}
                     </div>
                     <div className="team-tracking">
-                        <h3>Team tracking</h3>
+                        <Link title="Team-tracking for robust and intuitive speculation." id="t-2">
+                            <h3>Team tracking</h3>
+                        </Link>{' '}
                     </div>
                     <div className="fantasy-tracking">
-                        <h3>Fantasy team tracking</h3>
+                        <Link title="Fantasy tracking for all your possbile combinations." id="t-3">
+                            <h3>Fantasy team tracking</h3>
+                        </Link>{' '}
                     </div>
                     <div className='dashboard-img'>
                         <img src="./src/assets/dashboardsamplepic.png" alt="" />

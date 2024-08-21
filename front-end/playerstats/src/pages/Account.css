@@ -1,3 +1,8 @@
 .account-card {
     width: 60%;
+    margin-bottom: 5vh;
+}
+
+#account-page {
+    margin-bottom: 42vh;
 }

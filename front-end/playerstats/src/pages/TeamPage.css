@@ -9,3 +9,7 @@
     padding-left: 2vw;
     gap: 2vw;
 }
+
+#stats-table {
+    margin-bottom: 5vh;
+}

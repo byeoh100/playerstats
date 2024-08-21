@@ -36,6 +36,8 @@ function Community() {
         fetchData()
     }, [])
 
+    console.log(allPosts)
+
     const makePost = async () => {
         if (Object.values(userInfo.fantasy_team).includes(null)) {
             alert("You need a full team to make a post")
@@ -117,6 +119,7 @@ function Community() {
                                         width="45"
                                         height="45"
                                         onClick={() => toggleExpandComment(i)}
+                                        style={{cursor: "pointer"}}
                                     />
                                 </div>
                             </Card.Header>

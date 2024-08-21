@@ -27,3 +27,15 @@
     height: 90%;
     margin: 0 20px;
 }
+
+thead tr th {
+    cursor: pointer;
+}
+
+thead tr th:hover {
+    background-color: rgba(0,0,0,0.15)
+}
+
+.stats {
+    margin-bottom: 5vh;
+}

@@ -2,21 +2,26 @@
 .community-insights {
   padding: 100px;
   background-color: #f4f4f4;
-  margin-bottom: 20px;
   width: 100%;
   position: relative;
+  overflow-x: hidden;
+}
+
+.community-insights h2 {
+  padding: 50px ;
+  margin-top: -150px;
 }
 
 .community-insights img,
 .dashboard img {
   border: 1px solid #414141;
   border-radius: 4px;
-  padding: 50px;
-  width: 500px;
+  padding: 10px;
+  width: 800px;
 }
 
 .carousel {
-  display:flex;
+  display: flex;
   align-items: center;
   justify-content: center;
 }
@@ -39,7 +44,8 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  width: 100%
+  width: 100%;
+  overflow-y: hidden;
 }
 
 .header {
@@ -84,86 +90,87 @@ h1 {
 }
 
 .search-bar {
-    padding: 250px;
-    background-color: #f0f2f5;
-    background-image: url('src/assets/line-graph.svg');
-    justify-content: center;
-    background-size: 100% 100%;
+  padding: 250px;
+  background-color: #f0f2f5;
+  background-image: url('src/assets/line-graph.svg');
+  justify-content: center;
+  background-size: 100% 100%;
 }
 
 
 .search-bar h1 {
-    font-size: 36px;
-    color: #122345;
-    margin-bottom: 20px;
-    position: relative;
+  font-size: 36px;
+  color: #122345;
+  margin-bottom: 20px;
+  position: relative;
 
 }
 
 .search-bar button {
-    padding: 10px 20px;
-    background-color: #0e2a47;
-    color: white;
-    border: none;
+  padding: 10px 20px;
+  background-color: #0e2a47;
+  color: white;
+  border: none;
 }
 
 .search-bar .highlight {
-    font-weight: bold;
-    color: #1a3365;
-    text-shadow: #122345;
+  font-weight: bold;
+  color: #1a3365;
+  text-shadow: #122345;
 }
 
 .search-bar-container {
-    display: inline-flex;
-    align-items: center;
-    border-radius: 50px;
-    overflow: hidden;
-    box-shadow: 0px 4px 10px #1a3365;
-    background-color: #0e2a47;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 50px;
+  overflow: hidden;
+  box-shadow: 0px 4px 10px #1a3365;
+  background-color: #0e2a47;
 }
 
 .menu-icon,
 .search-icon {
-    background-color: #1a3365;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
+  background-color: #1a3365;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
 }
 
 .search-input {
-    background-color: #0e2a47;
-    border: none;
-    padding: 10px 20px;
-    width: 300px;
-    font-size: 16px;
+  background-color: #0e2a47;
+  border: none;
+  padding: 10px 20px;
+  width: 300px;
+  font-size: 16px;
 }
 
 .search-input:focus {
-    outline: none;
+  outline: none;
+  color: white;
 }
 
 .menu-icon {
-    border-top-left-radius: 50px;
-    border-bottom-left-radius: 50px;
+  border-top-left-radius: 50px;
+  border-bottom-left-radius: 50px;
 }
 
 .search-icon {
-    border-top-right-radius: 50px;
-    border-bottom-right-radius: 50px;
+  border-top-right-radius: 50px;
+  border-bottom-right-radius: 50px;
 }
 
 .search-bar:before {
-    content: '';
-    position: absolute;
-    top: 10%;
-    left: 50%;
-    width: 100%;
-    height: 1px;
-    background: linear-gradient(to right, #ddd, #1a3365, #ddd);
-    z-index: -1;
-    transform: translateX(-50%);
-    opacity: 0.2;
+  content: '';
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, #ddd, #1a3365, #ddd);
+  z-index: -1;
+  transform: translateX(-50%);
+  opacity: 0.2;
 }
 
 .dashboard {
@@ -174,4 +181,27 @@ h1 {
   font-size: 36px;
   color: #122345;
   margin-bottom: 20px;
+}
+
+.dashboard h2 {
+  margin-bottom: -50px;
+}
+
+.player-tracking {
+  position: relative;
+  top: 250px;
+  right: 550px;
+}
+
+
+.team-tracking {
+  position: relative;
+  top: 500px;
+  right: 550px;
+}
+
+.fantasy-tracking {
+  position: relative;
+  top: 300px;
+  left: 600px;
 }

@@ -3,11 +3,14 @@ import './AuthPopup.css';
 import Form from "react-bootstrap/Form"
 import { useOutletContext } from 'react-router-dom';
 import { signIn, signUp } from '../utilities';
+import axios from 'axios';
 
 function AuthPopup({ onClose, setUser, user }) {
     const [isLogin, setIsLogin] = useState(true)
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("")
+    const [fakeEmail, setFakeEmail] = useState(true)
+    const [showFake, setShowFake] = useState(false)
 
     const toggleForm = () => {
         setIsLogin(!isLogin);
@@ -15,8 +18,22 @@ function AuthPopup({ onClose, setUser, user }) {
 
     const handleSignUp = async (e) => {
         e.preventDefault()
-        setUser(await signUp(email, password))
-        window.location.reload()
+        let res = await axios.get(`/checkpass/${email}`, {
+            headers: {
+                "Authorization": `Bearer xaIFzCi3pw3OlHqGsUJiIYTqCdHtYnHx`
+            }
+        })
+        setFakeEmail(res.data.disposable)
+        if (fakeEmail == false) {
+            setUser(await signUp(email, password))
+            window.location.reload()
+        }
+        else {
+            setShowFake(true)
+            setTimeout(() => {
+                setShowFake(false)
+            }, 3000)
+        }
     };
 
     const handleSignIn = async (e) => {
@@ -66,6 +83,7 @@ function AuthPopup({ onClose, setUser, user }) {
                         <h3>Create an account</h3>
                         <Form onSubmit={(e) => handleSignUp(e)}>
                             <Form.Group className="mb-3 mt-3" controlId="formBasicEmail">
+                                {showFake ? <Form.Label style={{color: 'red'}}>Please use a valid email</Form.Label> : undefined}
                                 <Form.Control
                                     onChange={(e) => setEmail(e.target.value)}
                                     value={email}

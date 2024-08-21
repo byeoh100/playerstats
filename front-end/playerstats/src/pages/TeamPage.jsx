@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Button, Card, Table } from 'react-bootstrap'
+import { Button, Card, Table, Spinner } from 'react-bootstrap'
 import { api } from '../utilities'
 import axios from 'axios'
 import './TeamPage.css'
 import * as NBAIcons from 'react-nba-logos'
 
 function PlayerPage() {
-    const [roster, setRoster] = useState([])
+    const [roster, setRoster] = useState(null)
     const [teamData, setTeamData] = useState("DAL")
     const { name } = useParams()
-    
+
     const TeamIcon = NBAIcons[teamData]
 
     const teamAbbrev = {
@@ -76,13 +76,13 @@ function PlayerPage() {
             </div>
             <div className='content'>
                 <Card className='player-card'>
-                    <TeamIcon />
+                    {roster ? <TeamIcon /> : undefined}
                     <div className='basic-stats'>
                         <Card.Title>{name} ({teamAbbrev[name]})</Card.Title>
                     </div>
-                    <Button onClick={() => makeFavorite()}>Add to favorites</Button>
+                    <Button onClick={() => makeFavorite()} className='ms-auto'>Add to favorites</Button>
                 </Card>
-                <Card id="stats-table">
+                {roster ? <Card id="stats-table">
                     <Table striped>
                         <thead>
                             <tr>
@@ -104,6 +104,12 @@ function PlayerPage() {
                         </tbody>
                     </Table>
                 </Card>
+                    :
+                    <div className='mt-3 mb-3'>
+                        <Spinner animation="border" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </Spinner>
+                    </div>}
             </div>
         </div>
     )

@@ -1,14 +1,15 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { Card } from 'react-bootstrap'
+import { Card, Spinner } from 'react-bootstrap'
 
 import './GetTeam.css'
 import { useNavigate } from 'react-router-dom'
 
-function GetTeam() {
-  const [teams, setTeams] = useState([])
+import * as NBAIcons from 'react-nba-logos'
 
+function GetTeam() {
+  const [teams, setTeams] = useState(null)
   const navigate = useNavigate()
 
   const apiKey = import.meta.env.VITE_BALLDONTLIE_KEY
@@ -30,27 +31,23 @@ function GetTeam() {
     fetchData()
   }, [])
 
-  let allTeam = teams.map((i) => {
-    if(i.city != "") {
-      return i.full_name
-    }
-  })
-  console.log(allTeam)
-
   return (
     <div className='page'>
       <div className="title">
         <h2 style={{ whiteSpace: 'nowrap' }}>AllStats / <strong>Teams</strong></h2> <hr />
       </div>
       <div className='content'>
-        <div id='all-teams'>
+        {teams ? <div id='all-teams'>
           <Card className='conference'>
             <Card.Header>Western Conference</Card.Header>
             <Card.Body className='team-list'>
               {teams.map((team) => {
                 if (team.conference == 'West') {
+                  const TeamIcon = NBAIcons[team.abbreviation]
+
                   return (
-                    <Card className='d-flex align-items-center' onClick={() => navigate(`/teams/${team.full_name}`)} style={{cursor: "pointer"}}>
+                    <Card className='d-flex align-items-center' id='team-card' onClick={() => navigate(`/teams/${team.full_name}`)} style={{ cursor: "pointer" }}>
+                      <TeamIcon size={50} />
                       <Card.Title>{team.full_name}</Card.Title>
                     </Card>
                   )
@@ -63,8 +60,11 @@ function GetTeam() {
             <Card.Body className='team-list'>
               {teams.map((team) => {
                 if (team.conference == 'East') {
+                  const TeamIcon = NBAIcons[team.abbreviation]
+
                   return (
-                    <Card className='d-flex align-items-center' onClick={() => navigate(`/teams/${team.full_name}`)} style={{cursor: "pointer"}}>
+                    <Card className='d-flex align-items-center' id='team-card' onClick={() => navigate(`/teams/${team.full_name}`)} style={{ cursor: "pointer" }}>
+                      <TeamIcon size={50} />
                       <Card.Title>{team.full_name}</Card.Title>
                     </Card>
                   )
@@ -73,6 +73,12 @@ function GetTeam() {
             </Card.Body>
           </Card>
         </div>
+          :
+          <div className='mt-3 mb-3'>
+            <Spinner animation="border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>
+          </div>}
       </div>
     </div>
   )

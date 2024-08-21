@@ -3,6 +3,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    margin-bottom: 5vh;
 }
 
 .conference {
@@ -14,3 +15,9 @@
     flex-direction: column;
     gap: 1vh;
 }
+
+#team-card:hover {
+    transition: 250ms;
+    background-color: #D9D9D9;
+}
+

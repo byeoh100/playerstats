@@ -15,16 +15,18 @@ import { confirmUser } from '../utilities';
 import { api } from '../utilities';
 import axios from 'axios';
 import playerData from '../assets/players_by_fname.json'
-import { TOR } from 'react-nba-logos'
+import * as NBAIcons from 'react-nba-logos'
 import { Typeahead } from 'react-bootstrap-typeahead';
 
 import { makeGList, makeFList, makeCList } from '../utilities'
+
+import 'bootstrap-icons/font/bootstrap-icons.css'
 
 function Profile() {
     const [userInfo, setUserInfo] = useState({})
     const [favPlayerInfo, setFavPlayerInfo] = useState(null)
     const [favPlayerID, setFavPlayerID] = useState({})
-    const [favTeam, setFavTeam] = useState(null)
+    const [favTeam, setFavTeam] = useState('DAL')
     const [loading, setLoading] = useState(true)
 
     const [selectedPG, setSelectedPG] = useState("")
@@ -33,19 +35,61 @@ function Profile() {
     const [selectedPF, setSelectedPF] = useState("")
     const [selectedC, setSelectedC] = useState("")
 
+    const teamAbbrev = {
+        "Atlanta Hawks": "ATL",
+        "Boston Celtics": "BOS",
+        "Brooklyn Nets": "BKN",
+        "Charlotte Hornets": "CHA",
+        "Chicago Bulls": "CHI",
+        "Cleveland Cavaliers": "CLE",
+        "Dallas Mavericks": "DAL",
+        "Denver Nuggets": "DEN",
+        "Detroit Pistons": "DET",
+        "Golden State Warriors": "GSW",
+        "Houston Rockets": "HOU",
+        "Indiana Pacers": "IND",
+        "LA Clippers": "LAC",
+        "Los Angeles Lakers": "LAL",
+        "Memphis Grizzlies": "MEM",
+        "Miami Heat": "MIA",
+        "Milwaukee Bucks": "MIL",
+        "Minnesota Timberwolves": "MIN",
+        "New Orleans Pelicans": "NOP",
+        "New York Knicks": "NYN",
+        "Oklahoma City Thunder": "OKC",
+        "Orlando Magic": "ORL",
+        "Philadelphia 76ers": "PHI",
+        "Phoenix Suns": "PHX",
+        "Portland Trail Blazers": "POR",
+        "Sacramento Kings": "SAC",
+        "San Antonio Spurs": "SAS",
+        "Toronto Raptors": "TOR",
+        "Utah Jazz": "UTA",
+        "Washington Wizards": "WAS"
+    }
+
+    const FavTeamIcon = NBAIcons[teamAbbrev[favTeam]]
+
     useEffect(() => {
         const fetchData = async () => {
             let response = await api.get("info/");
             setUserInfo(response.data)
             let favPlayer = response.data.fav_player.player
             setFavPlayerID(playerData[`${favPlayer}`])
-            let resPlayer = await axios.get(`/playerapi/PlayerDataTotals/name/${favPlayer}`)
-            setFavPlayerInfo(resPlayer.data[resPlayer.data.length - 1])
+            try {
+                let resPlayer = await axios.get(`/playerapi/PlayerDataTotals/name/${favPlayer}`)
+                setFavPlayerInfo(resPlayer.data[resPlayer.data.length - 1])
+            }
+            catch (err) {
+                console.log(err)
+            }
             setFavTeam(response.data.fav_team.team)
             setLoading(false)
         }
         fetchData()
     }, [])
+
+    console.log(userInfo)
 
     const updateFantasyTeam = async (e) => {
         e.preventDefault()
@@ -67,6 +111,23 @@ function Profile() {
         location.reload()
     }
 
+    const deletePlayer = async () => {
+        let res = await api.delete("/players/")
+        setFavPlayerID(null)
+        setFavPlayerInfo(null)
+    }
+
+    const deleteTeam = async () => {
+        let res = await api.delete("/teams/")
+        setFavTeam(null)
+    }
+
+    const deletePost = async (post_id) => {
+        let res = await api.delete(`posts/${post_id}`)
+        let response = await api.get("info/");
+        setUserInfo(response.data)
+    }
+
     return (
         <div className='page'>
             <div className="title">
@@ -74,43 +135,48 @@ function Profile() {
             </div>
             {loading ? undefined : <div className='prof-content'>
                 <Card className='stats'>
+                    <i className="bi bi-trash" id='dashboard-trash' onClick={deletePlayer} />
                     <Card.Header id='prof-card'>
-                        <img
-                            src={favPlayerID.playerid != undefined ?
-                                `../src/assets/img/${favPlayerID.playerid}.png`
-                                :
-                                './src/assets/defaultplayer.jpg'
-                            }
-                            width="100"
-                            height="75"
-                        />
-                        <div className='basic-stats'>
-                            <Card.Title>{favPlayerInfo?.playerName}</Card.Title>
-                            <Card.Text>
-                                Age: {favPlayerInfo?.age}<br />
-                                Team: {favPlayerInfo?.team} ({favPlayerInfo?.position})
-                            </Card.Text>
-                        </div>
-                        <div className='vertical-line'></div>
-                        <div className='average-stats'>
-                            <Card.Text>PTS</Card.Text>
-                            <Card.Title>{(favPlayerInfo?.points / favPlayerInfo?.games).toFixed(2)}</Card.Title>
-                        </div>
-                        <div className='vertical-line'></div>
-                        <div className='average-stats'>
-                            <Card.Text>REB</Card.Text>
-                            <Card.Title>{(favPlayerInfo?.totalRb / favPlayerInfo?.games).toFixed(2)}</Card.Title>
-                        </div>
-                        <div className='vertical-line'></div>
-                        <div className='average-stats'>
-                            <Card.Text>AST</Card.Text>
-                            <Card.Title>{(favPlayerInfo?.assists / favPlayerInfo?.games).toFixed(2)}</Card.Title>
-                        </div>
-                        <div className='vertical-line'></div>
-                        <div className='average-stats'>
-                            <Card.Text>FG%</Card.Text>
-                            <Card.Title>{(favPlayerInfo?.fieldPercent * 100).toFixed(2)}</Card.Title>
-                        </div>
+                        {favPlayerInfo ? <>
+                            <img
+                                src={favPlayerID.playerid != undefined ?
+                                    `../src/assets/img/${favPlayerID.playerid}.png`
+                                    :
+                                    '../src/assets/defaultplayer.jpg'
+                                }
+                                width="100"
+                                height="75"
+                            />
+                            <div className='basic-stats'>
+                                <Card.Title>{favPlayerInfo?.playerName}</Card.Title>
+                                <Card.Text>
+                                    Age: {favPlayerInfo?.age}<br />
+                                    Team: {favPlayerInfo?.team} ({favPlayerInfo?.position})
+                                </Card.Text>
+                            </div>
+                            <div className='vertical-line'></div>
+                            <div className='average-stats'>
+                                <Card.Text>PTS</Card.Text>
+                                <Card.Title>{(favPlayerInfo?.points / favPlayerInfo?.games).toFixed(2)}</Card.Title>
+                            </div>
+                            <div className='vertical-line'></div>
+                            <div className='average-stats'>
+                                <Card.Text>REB</Card.Text>
+                                <Card.Title>{(favPlayerInfo?.totalRb / favPlayerInfo?.games).toFixed(2)}</Card.Title>
+                            </div>
+                            <div className='vertical-line'></div>
+                            <div className='average-stats'>
+                                <Card.Text>AST</Card.Text>
+                                <Card.Title>{(favPlayerInfo?.assists / favPlayerInfo?.games).toFixed(2)}</Card.Title>
+                            </div>
+                            <div className='vertical-line'></div>
+                            <div className='average-stats'>
+                                <Card.Text>FG%</Card.Text>
+                                <Card.Title>{(favPlayerInfo?.fieldPercent * 100).toFixed(2)}</Card.Title>
+                            </div>
+                        </>
+                            :
+                            <Card.Title>You do not have a favorite player</Card.Title>}
                     </Card.Header>
                     <Card.Body>
                         <Line
@@ -122,37 +188,32 @@ function Profile() {
                     </Card.Body>
                 </Card>
                 <Card className='stats'>
-                    <Card.Header>
-                        <Row>
-                            <Col>
-                                <img
-                                    src='./src/assets/defaultplayer.jpg'
-                                    width="50"
-                                    height="50"
-                                />
-                            </Col>
-                            <Col>
-                                <TOR size={60} />
-                                <Row style={{ whiteSpace: 'nowrap' }}>{favTeam}</Row>
-                                <Row>RANKING - DIVISION</Row>
-                            </Col>
-                            <Col>WIN</Col>
-                            <Col>LOSS</Col>
-                        </Row>
-                        <Card.Body>
-                            <Line
-                                data={{
-                                    labels: [1, 2, 3, 4, 5],
-                                    datasets: [1]
-                                }}
-                            />
-                        </Card.Body>
+                    <i className="bi bi-trash" id='dashboard-trash' onClick={deleteTeam} />
+                    <Card.Header id='team-card'>
+                        {!favTeam ?
+                            <div className='no-team'>
+                                <Card.Title>You do not have a favorite team</Card.Title>
+                            </div>
+                            :
+                            <>
+                                <FavTeamIcon size={75} />
+                                <Card.Title>{favTeam}</Card.Title>
+                            </>
+                        }
                     </Card.Header>
+                    <Card.Body>
+                        <Line
+                            data={{
+                                labels: [1, 2, 3, 4, 5],
+                                datasets: [1]
+                            }}
+                        />
+                    </Card.Body>
                 </Card>
                 <Card className='fantasy-team'>
                     <Form onSubmit={updateFantasyTeam}>
                         <Card.Header>
-                            <Card.Title>FANTASY TEAM</Card.Title>
+                            <Card.Title>Fantasy Team</Card.Title>
                             <Card.Text>Modify</Card.Text>
                             <Button type='submit'>Confirm changes</Button>
                         </Card.Header>
@@ -294,6 +355,25 @@ function Profile() {
                             </div>
                         </Card.Body>
                     </Form>
+                    <Card.Header id='posts-section'>
+                        <Card.Title>My Past Posts</Card.Title>
+                    </Card.Header>
+                    <Card.Body>
+                        {userInfo.posts.map((post) => (
+                            <div className='dashboard-posts'>
+                                <div id='player-post-box'>
+                                    {Object.values(post.team).map((player) => (
+                                        <img
+                                            src={`./src/assets/img/${playerData[`${player}`].playerid}.png`}
+                                            width="40"
+                                            height="30"
+                                        />
+                                    ))}
+                                </div>
+                                <i className="bi bi-trash" style={{ cursor: 'pointer' }} onClick={() => deletePost(post.id)} />
+                            </div>
+                        ))}
+                    </Card.Body>
                 </Card>
             </div>}
         </div>

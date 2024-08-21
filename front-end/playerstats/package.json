@@ -15,6 +15,7 @@
     "@fortawesome/react-fontawesome": "^0.2.2",
     "axios": "^1.7.4",
     "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
     "chart.js": "^4.4.3",
     "chartist": "^0.10.1",
     "csv-to-js-parser": "^2.3.7",
@@ -26,7 +27,8 @@
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.3.1",
     "react-nba-logos": "^1.1.3",
-    "react-router-dom": "^6.26.0"
+    "react-router-dom": "^6.26.0",
+    "stytch": "^11.4.1"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",

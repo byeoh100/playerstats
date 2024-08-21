@@ -47,3 +47,38 @@
     display: flex;
     flex-direction: row;
 }
+
+#team-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+    padding-left: 3vw;
+}
+
+#dashboard-trash {
+    position: absolute;
+    margin-right: 56vw;
+    padding-left: 0.5vw;
+    padding-top: 0.5vh;
+    cursor: pointer;
+}
+
+.no-team {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-right: 1.5vw;
+}
+
+.dashboard-posts {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#player-post-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
