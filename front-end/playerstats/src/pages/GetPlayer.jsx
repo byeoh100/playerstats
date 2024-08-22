@@ -24,6 +24,10 @@ function GetPlayer() {
 	const [pageNum, setPageNum] = useState(1)
 	const [maxPage, setMaxPage] = useState(1)
 	const [season, setSeason] = useState("2023")
+	
+	const [textFilter, setTextFilter] = useState('')
+	const [displayPlayers, setDisplayPlayers] = useState([])
+
 	const navigate = useNavigate()
 
 	const dataPull = {
@@ -63,6 +67,8 @@ function GetPlayer() {
 					page += 1
 				}
 				setPlayers(allPlayers)
+				setDisplayPlayers(allPlayers)
+				console.log(displayPlayers)
 			}
 			catch {
 				console.log("failed")
@@ -74,6 +80,13 @@ function GetPlayer() {
 	const handleSubmit = (e) => {
 		e.preventDefault()
 		setPlayerName(e.target[0].value)
+	}
+
+	const searchChange = (e) => {
+		const value = e.target.value
+		setTextFilter(value)
+		setDisplayPlayers(players.filter((i) => i.player_name.toLowerCase().includes(textFilter.toLowerCase())))
+		setMaxPage(Math.ceil(displayPlayers.length / 50))
 	}
 
 	return (
@@ -122,6 +135,8 @@ function GetPlayer() {
 								placeholder="Search for a player"
 								id="player-filter-search"
 								aria-label="Search"
+								value={textFilter}
+								onChange={searchChange}
 							/>
 						</Form>
 					</Card>
@@ -142,7 +157,7 @@ function GetPlayer() {
 									</tr>
 								</thead>
 								<tbody>
-									{players == null ? undefined : players.slice((pageNum - 1) * 50, pageNum * 50).map((i) => (
+									{displayPlayers == null ? undefined : displayPlayers.slice((pageNum - 1) * 50, pageNum * 50).map((i) => (
 										<tr>
 											{Object.keys(dataPull).map((cat) => (
 												<th onClick={() => navigate(`/players/${i.player_name}`)} style={{ cursor: "pointer" }}>

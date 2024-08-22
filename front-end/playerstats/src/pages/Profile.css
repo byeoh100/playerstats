@@ -82,3 +82,15 @@
     flex-direction: row;
     justify-content: flex-start;
 }
+
+.average-stats {
+    cursor: pointer;
+}
+
+.average-stats:hover {
+    background-color: rgba(0,0,0,0.15);
+}
+
+#stats-table-dash {
+    overflow: scroll;
+}

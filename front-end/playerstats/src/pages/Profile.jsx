@@ -7,6 +7,7 @@ import {
     Row,
     Col,
     Form,
+    Spinner
 } from "react-bootstrap";
 
 import Chart from "chart.js/auto"
@@ -26,7 +27,11 @@ function Profile() {
     const [userInfo, setUserInfo] = useState({})
     const [favPlayerInfo, setFavPlayerInfo] = useState(null)
     const [favPlayerID, setFavPlayerID] = useState({})
+    const [favPlayerGames, setFavPlayerGames] = useState([])
+
     const [favTeam, setFavTeam] = useState('DAL')
+    const [teamData, setTeamData] = useState([])
+
     const [loading, setLoading] = useState(true)
 
     const [selectedPG, setSelectedPG] = useState("")
@@ -34,6 +39,9 @@ function Profile() {
     const [selectedSF, setSelectedSF] = useState("")
     const [selectedPF, setSelectedPF] = useState("")
     const [selectedC, setSelectedC] = useState("")
+
+    const [chartCat, setChartCat] = useState("PTS")
+    const [dataCat, setDataCat] = useState("points")
 
     const teamAbbrev = {
         "Atlanta Hawks": "ATL",
@@ -68,6 +76,13 @@ function Profile() {
         "Washington Wizards": "WAS"
     }
 
+    const dataPull = {
+        "playerName": "Name",
+        "age": "Age",
+        "position": "Position",
+        "games": "GP",
+    }
+
     const FavTeamIcon = NBAIcons[teamAbbrev[favTeam]]
 
     useEffect(() => {
@@ -78,6 +93,7 @@ function Profile() {
             setFavPlayerID(playerData[`${favPlayer}`])
             try {
                 let resPlayer = await axios.get(`/playerapi/PlayerDataTotals/name/${favPlayer}`)
+                setFavPlayerGames(resPlayer.data.slice(0, 5))
                 setFavPlayerInfo(resPlayer.data[resPlayer.data.length - 1])
             }
             catch (err) {
@@ -88,8 +104,6 @@ function Profile() {
         }
         fetchData()
     }, [])
-
-    console.log(userInfo)
 
     const updateFantasyTeam = async (e) => {
         e.preventDefault()
@@ -128,254 +142,277 @@ function Profile() {
         setUserInfo(response.data)
     }
 
+    const changeChart = (cat) => {
+        setChartCat(cat)
+        if (cat == "PTS") {
+            setDataCat("points")
+        }
+        else if (cat == "REB") {
+            setDataCat("totalRb")
+        }
+        else if (cat == "AST") {
+            setDataCat("assists")
+        }
+        else if (cat == "FG%") {
+            setDataCat("fieldPercent")
+        }
+    }
+
     return (
         <div className='page'>
             <div className="title">
                 <h2 style={{ whiteSpace: 'nowrap' }}>My Profile / <strong>Dashboard</strong></h2> <hr />
             </div>
-            {loading ? undefined : <div className='prof-content'>
-                <Card className='stats'>
-                    <i className="bi bi-trash" id='dashboard-trash' onClick={deletePlayer} />
-                    <Card.Header id='prof-card'>
-                        {favPlayerInfo ? <>
-                            <img
-                                src={favPlayerID.playerid != undefined ?
-                                    `../src/assets/img/${favPlayerID.playerid}.png`
-                                    :
-                                    '../src/assets/defaultplayer.jpg'
-                                }
-                                width="100"
-                                height="75"
-                            />
-                            <div className='basic-stats'>
-                                <Card.Title>{favPlayerInfo?.playerName}</Card.Title>
-                                <Card.Text>
-                                    Age: {favPlayerInfo?.age}<br />
-                                    Team: {favPlayerInfo?.team} ({favPlayerInfo?.position})
-                                </Card.Text>
-                            </div>
-                            <div className='vertical-line'></div>
-                            <div className='average-stats'>
-                                <Card.Text>PTS</Card.Text>
-                                <Card.Title>{(favPlayerInfo?.points / favPlayerInfo?.games).toFixed(2)}</Card.Title>
-                            </div>
-                            <div className='vertical-line'></div>
-                            <div className='average-stats'>
-                                <Card.Text>REB</Card.Text>
-                                <Card.Title>{(favPlayerInfo?.totalRb / favPlayerInfo?.games).toFixed(2)}</Card.Title>
-                            </div>
-                            <div className='vertical-line'></div>
-                            <div className='average-stats'>
-                                <Card.Text>AST</Card.Text>
-                                <Card.Title>{(favPlayerInfo?.assists / favPlayerInfo?.games).toFixed(2)}</Card.Title>
-                            </div>
-                            <div className='vertical-line'></div>
-                            <div className='average-stats'>
-                                <Card.Text>FG%</Card.Text>
-                                <Card.Title>{(favPlayerInfo?.fieldPercent * 100).toFixed(2)}</Card.Title>
-                            </div>
-                        </>
-                            :
-                            <Card.Title>You do not have a favorite player</Card.Title>}
-                    </Card.Header>
-                    <Card.Body>
-                        <Line
-                            data={{
-                                labels: [1, 2, 3, 4, 5],
-                                datasets: [1]
-                            }}
-                        />
-                    </Card.Body>
-                </Card>
-                <Card className='stats'>
-                    <i className="bi bi-trash" id='dashboard-trash' onClick={deleteTeam} />
-                    <Card.Header id='team-card'>
-                        {!favTeam ?
-                            <div className='no-team'>
-                                <Card.Title>You do not have a favorite team</Card.Title>
-                            </div>
-                            :
-                            <>
-                                <FavTeamIcon size={75} />
-                                <Card.Title>{favTeam}</Card.Title>
+            {loading ?
+                <div className='mt-3 mb-3'>
+                    <Spinner animation="border" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </Spinner>
+                </div>
+                :
+                <div className='prof-content'>
+                    <Card className='stats'>
+                        <i className="bi bi-trash" id='dashboard-trash' onClick={deletePlayer} />
+                        <Card.Header id='prof-card'>
+                            {favPlayerInfo ? <>
+                                <img
+                                    src={favPlayerID.playerid != undefined ?
+                                        `../src/assets/img/${favPlayerID.playerid}.png`
+                                        :
+                                        '../src/assets/defaultplayer.jpg'
+                                    }
+                                    width="125"
+                                    height="90"
+                                />
+                                <div className='basic-stats'>
+                                    <Card.Title>{favPlayerInfo?.playerName}</Card.Title>
+                                    <Card.Text>
+                                        Age: {favPlayerInfo?.age}<br />
+                                        Team: {favPlayerInfo?.team} ({favPlayerInfo?.position})
+                                    </Card.Text>
+                                </div>
+                                <div className='vertical-line'></div>
+                                <div className='average-stats' onClick={() => changeChart('PTS')}>
+                                    <Card.Text>PTS</Card.Text>
+                                    <Card.Title>{(favPlayerInfo?.points / favPlayerInfo?.games).toFixed(2)}</Card.Title>
+                                </div>
+                                <div className='vertical-line'></div>
+                                <div className='average-stats' onClick={() => changeChart('REB')}>
+                                    <Card.Text>REB</Card.Text>
+                                    <Card.Title>{(favPlayerInfo?.totalRb / favPlayerInfo?.games).toFixed(2)}</Card.Title>
+                                </div>
+                                <div className='vertical-line'></div>
+                                <div className='average-stats' onClick={() => changeChart('AST')}>
+                                    <Card.Text>AST</Card.Text>
+                                    <Card.Title>{(favPlayerInfo?.assists / favPlayerInfo?.games).toFixed(2)}</Card.Title>
+                                </div>
+                                <div className='vertical-line'></div>
+                                <div className='average-stats' onClick={() => changeChart('FG%')}>
+                                    <Card.Text>FG%</Card.Text>
+                                    <Card.Title>{(favPlayerInfo?.fieldPercent * 100).toFixed(2)}</Card.Title>
+                                </div>
                             </>
-                        }
-                    </Card.Header>
-                    <Card.Body>
-                        <Line
-                            data={{
-                                labels: [1, 2, 3, 4, 5],
-                                datasets: [1]
-                            }}
-                        />
-                    </Card.Body>
-                </Card>
-                <Card className='fantasy-team'>
-                    <Form onSubmit={updateFantasyTeam}>
-                        <Card.Header>
-                            <Card.Title>Fantasy Team</Card.Title>
-                            <Card.Text>Modify</Card.Text>
-                            <Button type='submit'>Confirm changes</Button>
+                                :
+                                <Card.Title>You do not have a favorite player</Card.Title>}
                         </Card.Header>
-                        <Card.Body className='player-box'>
-                            <div className='fantasy-team-player'>
-                                <img
-                                    src={userInfo.fantasy_team.point_guard == null ?
-                                        './src/assets/defaultplayer.jpg'
-                                        :
-                                        `./src/assets/img/${playerData[`${userInfo.fantasy_team.point_guard}`].playerid}.png`}
-                                    width="100"
-                                    height="75"
-                                />
-                                <div>
-                                    <Card.Title>
-                                        {userInfo.fantasy_team.point_guard == null ?
-                                            "Select Player"
-                                            :
-                                            userInfo.fantasy_team.point_guard}
-                                    </Card.Title>
-                                    <Form.Group>
-                                        <Typeahead
-                                            id='point-guard'
-                                            labelKey={(option) => `${option}`}
-                                            options={makeGList()}
-                                            placeholder='Point Guard'
-                                            onChange={setSelectedPG}
-                                        />
-                                    </Form.Group>
-                                </div>
-                            </div>
-                            <div className='fantasy-team-player'>
-                                <img
-                                    src={userInfo.fantasy_team.shooting_guard == null ?
-                                        './src/assets/defaultplayer.jpg'
-                                        :
-                                        `./src/assets/img/${playerData[`${userInfo.fantasy_team.shooting_guard}`].playerid}.png`}
-                                    width="100"
-                                    height="75"
-                                />
-                                <div>
-                                    <Card.Title>
-                                        {userInfo.fantasy_team.shooting_guard == null ?
-                                            "Select Player"
-                                            :
-                                            userInfo.fantasy_team.shooting_guard}
-                                    </Card.Title>
-                                    <Form.Group>
-                                        <Typeahead
-                                            id='shooting-guard'
-                                            labelKey={(option) => `${option}`}
-                                            options={makeGList()}
-                                            placeholder='Shooting Guard'
-                                            onChange={setSelectedSG}
-                                        />
-                                    </Form.Group>
-                                </div>
-                            </div>
-                            <div className='fantasy-team-player'>
-                                <img
-                                    src={userInfo.fantasy_team.small_forward == null ?
-                                        './src/assets/defaultplayer.jpg'
-                                        :
-                                        `./src/assets/img/${playerData[`${userInfo.fantasy_team.small_forward}`].playerid}.png`}
-                                    width="100"
-                                    height="75"
-                                />
-                                <div>
-                                    <Card.Title>
-                                        {userInfo.fantasy_team.small_forward == null ?
-                                            "Select Player"
-                                            :
-                                            userInfo.fantasy_team.small_forward}
-                                    </Card.Title>
-                                    <Form.Group>
-                                        <Typeahead
-                                            id='small_forward'
-                                            labelKey={(option) => `${option}`}
-                                            options={makeFList()}
-                                            placeholder='Small Forward'
-                                            onChange={setSelectedSF}
-                                        />
-                                    </Form.Group>
-                                </div>
-                            </div>
-                            <div className='fantasy-team-player'>
-                                <img
-                                    src={userInfo.fantasy_team.power_forward == null ?
-                                        './src/assets/defaultplayer.jpg'
-                                        :
-                                        `./src/assets/img/${playerData[`${userInfo.fantasy_team.power_forward}`].playerid}.png`}
-                                    width="100"
-                                    height="75"
-                                />
-                                <div>
-                                    <Card.Title>
-                                        {userInfo.fantasy_team.power_forward == null ?
-                                            "Select Player"
-                                            :
-                                            userInfo.fantasy_team.power_forward}
-                                    </Card.Title>
-                                    <Form.Group>
-                                        <Typeahead
-                                            id='power_forward'
-                                            labelKey={(option) => `${option}`}
-                                            options={makeFList()}
-                                            placeholder='Power Forward'
-                                            onChange={setSelectedPF}
-                                        />
-                                    </Form.Group>
-                                </div>
-                            </div>
-                            <div className='fantasy-team-player'>
-                                <img
-                                    src={userInfo.fantasy_team.center == null ?
-                                        './src/assets/defaultplayer.jpg'
-                                        :
-                                        `./src/assets/img/${playerData[`${userInfo.fantasy_team.center}`].playerid}.png`}
-                                    width="100"
-                                    height="75"
-                                />
-                                <div>
-                                    <Card.Title>
-                                        {userInfo.fantasy_team.center == null ?
-                                            "Select Player"
-                                            :
-                                            userInfo.fantasy_team.center}
-                                    </Card.Title>
-                                    <Form.Group>
-                                        <Typeahead
-                                            id='center'
-                                            labelKey={(option) => `${option}`}
-                                            options={makeCList()}
-                                            placeholder='Center'
-                                            onChange={setSelectedC}
-                                        />
-                                    </Form.Group>
-                                </div>
-                            </div>
+                        <Card.Body>
+                            <Line
+                                data={{
+                                    labels: favPlayerGames.map((i) => i.season),
+                                    datasets: [{ label: chartCat, data: favPlayerGames.map((i) => i[dataCat]) }]
+                                }}
+                            />
                         </Card.Body>
-                    </Form>
-                    <Card.Header id='posts-section'>
-                        <Card.Title>My Past Posts</Card.Title>
-                    </Card.Header>
-                    <Card.Body>
-                        {userInfo.posts.map((post) => (
-                            <div className='dashboard-posts'>
-                                <div id='player-post-box'>
-                                    {Object.values(post.team).map((player) => (
-                                        <img
-                                            src={`./src/assets/img/${playerData[`${player}`].playerid}.png`}
-                                            width="40"
-                                            height="30"
-                                        />
-                                    ))}
+                    </Card>
+                    <Card className='stats'>
+                        <i className="bi bi-trash" id='dashboard-trash' onClick={deleteTeam} />
+                        <Card.Header id='team-card'>
+                            {!favTeam ?
+                                <div className='no-team'>
+                                    <Card.Title>You do not have a favorite team</Card.Title>
                                 </div>
-                                <i className="bi bi-trash" style={{ cursor: 'pointer' }} onClick={() => deletePost(post.id)} />
-                            </div>
-                        ))}
-                    </Card.Body>
-                </Card>
-            </div>}
+                                :
+                                <>
+                                    <FavTeamIcon size={75} />
+                                    <Card.Title>{favTeam}</Card.Title>
+                                </>
+                            }
+                        </Card.Header>
+                        <Card.Body>
+                            <Line
+                                data={{
+                                    labels: [1, 2, 3, 4, 5],
+                                    datasets: [1]
+                                }}
+                            />
+                        </Card.Body>
+                    </Card>
+                    <Card className='fantasy-team'>
+                        <Form onSubmit={updateFantasyTeam}>
+                            <Card.Header>
+                                <Card.Title>Fantasy Team</Card.Title>
+                                <Card.Text>Modify</Card.Text>
+                                <Button type='submit'>Confirm changes</Button>
+                            </Card.Header>
+                            <Card.Body className='player-box'>
+                                <div className='fantasy-team-player'>
+                                    <img
+                                        src={userInfo.fantasy_team.point_guard == null ?
+                                            './src/assets/defaultplayer.jpg'
+                                            :
+                                            `./src/assets/img/${playerData[`${userInfo.fantasy_team.point_guard}`].playerid}.png`}
+                                        width="100"
+                                        height="75"
+                                    />
+                                    <div>
+                                        <Card.Title>
+                                            {userInfo.fantasy_team.point_guard == null ?
+                                                "Select Player"
+                                                :
+                                                userInfo.fantasy_team.point_guard}
+                                        </Card.Title>
+                                        <Form.Group>
+                                            <Typeahead
+                                                id='point-guard'
+                                                labelKey={(option) => `${option}`}
+                                                options={makeGList()}
+                                                placeholder='Point Guard'
+                                                onChange={setSelectedPG}
+                                            />
+                                        </Form.Group>
+                                    </div>
+                                </div>
+                                <div className='fantasy-team-player'>
+                                    <img
+                                        src={userInfo.fantasy_team.shooting_guard == null ?
+                                            './src/assets/defaultplayer.jpg'
+                                            :
+                                            `./src/assets/img/${playerData[`${userInfo.fantasy_team.shooting_guard}`].playerid}.png`}
+                                        width="100"
+                                        height="75"
+                                    />
+                                    <div>
+                                        <Card.Title>
+                                            {userInfo.fantasy_team.shooting_guard == null ?
+                                                "Select Player"
+                                                :
+                                                userInfo.fantasy_team.shooting_guard}
+                                        </Card.Title>
+                                        <Form.Group>
+                                            <Typeahead
+                                                id='shooting-guard'
+                                                labelKey={(option) => `${option}`}
+                                                options={makeGList()}
+                                                placeholder='Shooting Guard'
+                                                onChange={setSelectedSG}
+                                            />
+                                        </Form.Group>
+                                    </div>
+                                </div>
+                                <div className='fantasy-team-player'>
+                                    <img
+                                        src={userInfo.fantasy_team.small_forward == null ?
+                                            './src/assets/defaultplayer.jpg'
+                                            :
+                                            `./src/assets/img/${playerData[`${userInfo.fantasy_team.small_forward}`].playerid}.png`}
+                                        width="100"
+                                        height="75"
+                                    />
+                                    <div>
+                                        <Card.Title>
+                                            {userInfo.fantasy_team.small_forward == null ?
+                                                "Select Player"
+                                                :
+                                                userInfo.fantasy_team.small_forward}
+                                        </Card.Title>
+                                        <Form.Group>
+                                            <Typeahead
+                                                id='small_forward'
+                                                labelKey={(option) => `${option}`}
+                                                options={makeFList()}
+                                                placeholder='Small Forward'
+                                                onChange={setSelectedSF}
+                                            />
+                                        </Form.Group>
+                                    </div>
+                                </div>
+                                <div className='fantasy-team-player'>
+                                    <img
+                                        src={userInfo.fantasy_team.power_forward == null ?
+                                            './src/assets/defaultplayer.jpg'
+                                            :
+                                            `./src/assets/img/${playerData[`${userInfo.fantasy_team.power_forward}`].playerid}.png`}
+                                        width="100"
+                                        height="75"
+                                    />
+                                    <div>
+                                        <Card.Title>
+                                            {userInfo.fantasy_team.power_forward == null ?
+                                                "Select Player"
+                                                :
+                                                userInfo.fantasy_team.power_forward}
+                                        </Card.Title>
+                                        <Form.Group>
+                                            <Typeahead
+                                                id='power_forward'
+                                                labelKey={(option) => `${option}`}
+                                                options={makeFList()}
+                                                placeholder='Power Forward'
+                                                onChange={setSelectedPF}
+                                            />
+                                        </Form.Group>
+                                    </div>
+                                </div>
+                                <div className='fantasy-team-player'>
+                                    <img
+                                        src={userInfo.fantasy_team.center == null ?
+                                            './src/assets/defaultplayer.jpg'
+                                            :
+                                            `./src/assets/img/${playerData[`${userInfo.fantasy_team.center}`].playerid}.png`}
+                                        width="100"
+                                        height="75"
+                                    />
+                                    <div>
+                                        <Card.Title>
+                                            {userInfo.fantasy_team.center == null ?
+                                                "Select Player"
+                                                :
+                                                userInfo.fantasy_team.center}
+                                        </Card.Title>
+                                        <Form.Group>
+                                            <Typeahead
+                                                id='center'
+                                                labelKey={(option) => `${option}`}
+                                                options={makeCList()}
+                                                placeholder='Center'
+                                                onChange={setSelectedC}
+                                            />
+                                        </Form.Group>
+                                    </div>
+                                </div>
+                            </Card.Body>
+                        </Form>
+                        <Card.Header id='posts-section'>
+                            <Card.Title>My Past Posts</Card.Title>
+                        </Card.Header>
+                        <Card.Body>
+                            {userInfo.posts.map((post) => (
+                                <div className='dashboard-posts'>
+                                    <div id='player-post-box'>
+                                        {Object.values(post.team).map((player) => (
+                                            <img
+                                                src={`./src/assets/img/${playerData[`${player}`].playerid}.png`}
+                                                width="40"
+                                                height="30"
+                                            />
+                                        ))}
+                                    </div>
+                                    <i className="bi bi-trash" style={{ cursor: 'pointer' }} onClick={() => deletePost(post.id)} />
+                                </div>
+                            ))}
+                        </Card.Body>
+                    </Card>
+                </div>}
         </div>
     )
 }

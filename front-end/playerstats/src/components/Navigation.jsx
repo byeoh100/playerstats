@@ -17,8 +17,11 @@ import { Dropdown } from 'react-bootstrap'
 import AuthPopup from './AuthPopup';
 import { logOut } from '../utilities';
 
+import { useNavigate } from 'react-router-dom';
+
 function NavSearch({ user, setUser }) {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const navigate = useNavigate()
 
     const openPopup = () => {
         setIsPopupOpen(true);
@@ -30,6 +33,7 @@ function NavSearch({ user, setUser }) {
 
     const handleLogOut = async (e) => {
         setUser(await logOut());
+        navigate('/')
     };
 
     return (

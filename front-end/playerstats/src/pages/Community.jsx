@@ -12,6 +12,7 @@ import {
 import { useEffect, useState } from 'react';
 import { api } from '../utilities';
 import playerData from '../assets/players_by_fname.json'
+import { useOutletContext } from 'react-router-dom';
 
 function Community() {
     const [userInfo, setUserInfo] = useState({})
@@ -19,6 +20,8 @@ function Community() {
 
     const [newComment, setNewComment] = useState([])
     const [expandComment, setExpandComment] = useState(Array(allPosts.length).fill(false));
+
+    const { user } = useOutletContext()
 
     const toggleExpandComment = (index) => {
         const updatedExpandComment = [...expandComment];
@@ -36,22 +39,27 @@ function Community() {
         fetchData()
     }, [])
 
-    console.log(allPosts)
-
     const makePost = async () => {
         if (Object.values(userInfo.fantasy_team).includes(null)) {
             alert("You need a full team to make a post")
         }
         else {
             let res = await api.post("/posts/", { fantasy_team: userInfo.fantasy_team })
-            location.reload()
+            let resPost = await api.get("posts/all/")
+            setAllPosts(resPost.data)
         }
     }
 
     const makeComment = async (e, post_id) => {
         e.preventDefault()
         let res = await api.post(`/posts/${post_id}/comments`, { content: newComment })
-        location.reload()
+        let resPost = await api.get("posts/all/")
+        setAllPosts(resPost.data)
+    }
+
+    const formatDate = (date) => {
+        const newDate = new Date(date)
+        return newDate.toLocaleString()
     }
 
     return (
@@ -60,7 +68,7 @@ function Community() {
             <div className="title">
                 <h2 style={{ whiteSpace: 'nowrap' }}>Community / <strong>Fantasy Teams</strong></h2> <hr />
             </div>
-            <div className='content'>
+            {user ? <div className='content'>
                 <Card className='post-box'>
                     <div className='filters'>
                         <Button className='me-5' onClick={makePost}>Post my team</Button>
@@ -110,7 +118,7 @@ function Community() {
                                             height="50"
                                         />
                                     </div>
-                                    <span>{post.user} | {post.date_created}</span>
+                                    <span>{post.user} | {formatDate(post.date_created)}</span>
                                 </div>
                                 <div className='comment-col' id='right'>
                                     +{post.upvotes} / -{post.downvotes}
@@ -126,7 +134,7 @@ function Community() {
                             {expandComment[i] ? <Card.Body>
                                 {post.comments.map((comment) => (
                                     <Card.Text>
-                                        {comment.user}: {comment.content}
+                                        {comment.user} | {formatDate(comment.date_created)}: <strong>{comment.content}</strong>
                                     </Card.Text>
                                 ))}
                                 <Form className='d-flex' onSubmit={(e) => makeComment(e, post.id)}>
@@ -148,6 +156,8 @@ function Community() {
                     ))}
                 </Card>
             </div>
+            :
+            <h2 id='sign-in-message'>Please sign in to see this page</h2>}
         </div>
     )
 }

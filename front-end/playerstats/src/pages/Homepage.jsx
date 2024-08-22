@@ -61,11 +61,9 @@ function Homepage() {
             <div className="community-insights">
                 <h2>Community Insights</h2>
                 <div className="carousel">
-                    <button className="carousel-control left">&lt;</button>
                     <div className="carousel-items">
                         <img src="./src/assets/communitysamplepic.png" alt="" />
                     </div>
-                    <button className="carousel-control right">&gt;</button>
                 </div>
             </div>
         </div>

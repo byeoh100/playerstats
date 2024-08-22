@@ -32,6 +32,8 @@ function LineChart({ pData = null, category }) {
         }
     }, [pData, category])
 
+    console.log(pDataset)
+
     return (
         <Line ref={chartRef}
             data={{

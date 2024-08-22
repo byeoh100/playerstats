@@ -5,11 +5,13 @@ import { api } from '../utilities'
 import axios from 'axios'
 import './TeamPage.css'
 import * as NBAIcons from 'react-nba-logos'
+import { useNavigate } from 'react-router-dom'
 
 function PlayerPage() {
     const [roster, setRoster] = useState(null)
     const [teamData, setTeamData] = useState("DAL")
     const { name } = useParams()
+    const navigate = useNavigate()
 
     const TeamIcon = NBAIcons[teamData]
 
@@ -95,7 +97,7 @@ function PlayerPage() {
                             {roster == null ? undefined : roster.map((i) => (
                                 <tr>
                                     {Object.keys(dataPull).map((cat) => (
-                                        <th onClick={() => navigate(`/players/${i.player_name}`)} style={{ cursor: "pointer" }}>
+                                        <th onClick={() => navigate(`/players/${i.playerName}`)} style={{ cursor: "pointer" }}>
                                             {i[cat]}
                                         </th>
                                     ))}
