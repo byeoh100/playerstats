@@ -4,6 +4,7 @@ import Form from "react-bootstrap/Form"
 import { useOutletContext } from 'react-router-dom';
 import { signIn, signUp } from '../utilities';
 import axios from 'axios';
+import { api } from '../utilities';
 
 function AuthPopup({ onClose, setUser, user }) {
     const [isLogin, setIsLogin] = useState(true)
@@ -12,19 +13,13 @@ function AuthPopup({ onClose, setUser, user }) {
     const [fakeEmail, setFakeEmail] = useState(true)
     const [showFake, setShowFake] = useState(false)
 
-    const apiKey = import.meta.env.EMAIL_CHECK_KEY
-
     const toggleForm = () => {
         setIsLogin(!isLogin);
     };
 
     const handleSignUp = async (e) => {
         e.preventDefault()
-        let res = await axios.get(`/checkpass/${email}`, {
-            headers: {
-                "Authorization": `Bearer ${apiKey}`
-            }
-        })
+        let res = await api.get(`/emailchecker/${email}`)
         setFakeEmail(res.data.disposable)
         if (fakeEmail == false) {
             setUser(await signUp(email, password))

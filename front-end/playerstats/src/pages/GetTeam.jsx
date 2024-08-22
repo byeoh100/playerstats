@@ -7,21 +7,16 @@ import './GetTeam.css'
 import { useNavigate } from 'react-router-dom'
 
 import * as NBAIcons from 'react-nba-logos'
+import { api } from '../utilities'
 
 function GetTeam() {
   const [teams, setTeams] = useState(null)
   const navigate = useNavigate()
 
-  const apiKey = import.meta.env.VITE_BALLDONTLIE_KEY
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        let res = await axios.get("https://api.balldontlie.io/v1/teams", {
-          headers: {
-            "Authorization": `${apiKey}`
-          }
-        })
+        let res = await api.get(`/balldontlie/`)
         setTeams(res.data.data)
       }
       catch {

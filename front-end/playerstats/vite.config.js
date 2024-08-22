@@ -10,11 +10,6 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/playerapi/, ''),
       },
-      '/checkpass': {
-        target: 'https://api.usercheck.com/email/',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/checkpass/, ''),
-      }
     }
   }
 });
