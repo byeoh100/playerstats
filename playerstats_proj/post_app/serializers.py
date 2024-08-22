@@ -12,3 +12,24 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ['id', 'user', 'team', 'upvotes', 'downvotes', 'date_created', 'comments']
+    
+class CommentSerializerUser(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Comment
+        fields = ['post', 'user', 'content', 'date_created']
+
+    def get_user(self, obj):
+        return obj.user.display_name
+
+class PostSerializerUser(serializers.ModelSerializer):
+    comments = CommentSerializerUser(many=True)
+    user = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Post
+        fields = ['id', 'user', 'team', 'upvotes', 'downvotes', 'date_created', 'comments']
+
+    def get_user(self, obj):
+        return obj.user.display_name

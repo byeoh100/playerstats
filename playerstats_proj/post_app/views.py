@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from .models import Post
-from .serializers import PostSerializer, CommentSerializer
+from .serializers import PostSerializer, CommentSerializer, PostSerializerUser, CommentSerializerUser
 
 from user_app.views import TokenReq
 
@@ -15,7 +15,7 @@ from rest_framework.status import HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST, HTT
 class My_Posts(TokenReq):
     def get(self, request):
         try:
-            ser_my_posts = PostSerializer(request.user.posts, many=True, partial=True)
+            ser_my_posts = PostSerializerUser(request.user.posts, many=True, partial=True)
             return Response(ser_my_posts.data, status=HTTP_200_OK)
         except Exception as e:
             return Response(e, status=HTTP_400_BAD_REQUEST)
@@ -40,7 +40,7 @@ class My_Posts(TokenReq):
 class A_Post(TokenReq):
     def get(self, request, post_id):
         post = get_object_or_404(Post, pk=post_id)
-        return Response(PostSerializer(post).data, status=HTTP_200_OK)
+        return Response(PostSerializerUser(post).data, status=HTTP_200_OK)
     
     def delete(self, request, post_id):
         post = get_object_or_404(Post, pk=post_id)
@@ -61,3 +61,8 @@ class Comments(TokenReq):
                 return Response(ser_comment.errors, status=HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({"error": str(e)}, status=HTTP_400_BAD_REQUEST)
+        
+class All_Posts(APIView):
+    def get(self, request):
+        posts = PostSerializerUser(Post.objects.order_by('-date_created'), many=True)
+        return Response(posts.data)

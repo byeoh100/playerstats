@@ -62,6 +62,15 @@ class Info(TokenReq):
         user_info = UserInfoSerializer(request.user, partial=True)
         return Response(user_info.data, status=HTTP_200_OK)
     
+    def put(self, request):
+        data = request.data.copy()
+        new_user_info = UserInfoSerializer(request.user, data=data, partial=True)
+        if new_user_info.is_valid():
+            new_user_info.save()
+            return Response(f'Info changed')
+        else:
+            return Response(new_user_info.errors, status=HTTP_400_BAD_REQUEST)
+    
 class Test_Conn(APIView):
     def get(self, request):
         return Response('Successful connection', status=HTTP_200_OK)

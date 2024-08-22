@@ -10,7 +10,8 @@ class UserInfoSerializer(serializers.ModelSerializer):
     fav_player = FavPlayerSerializer()
     fav_team = FavTeamSerializer()
     fantasy_team = FantasyTeamSerializer()
+    posts = PostSerializer(many=True)
 
     class Meta:
         model = User
-        fields = ['display_name', 'email', 'fav_player', 'fav_team', 'fantasy_team', 'posts']
+        fields = ['display_name', 'email', 'fav_player', 'fav_team', 'fantasy_team', 'posts', 'profile_picture']
