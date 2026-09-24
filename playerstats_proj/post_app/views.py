@@ -1,16 +1,15 @@
-from django.shortcuts import render
 from rest_framework.views import APIView
 from .models import Post
-from .serializers import PostSerializer, CommentSerializer, PostSerializerUser, CommentSerializerUser
+from .serializers import PostSerializer, CommentSerializer, PostSerializerUser
 
 from user_app.views import TokenReq
 
-from fantasy_team_app.models import Fantasy_team
 from fantasy_team_app.serializers import FantasyTeamSerializer
 
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-from rest_framework.status import HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST, HTTP_201_CREATED, HTTP_200_OK
+from rest_framework.status import HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST, HTTP_200_OK
+
 
 class My_Posts(TokenReq):
     def get(self, request):
@@ -28,7 +27,6 @@ class My_Posts(TokenReq):
                 'team' : my_team
             }
             ser_my_posts = PostSerializer(data=data, partial=True)
-            print(ser_my_posts)
             if ser_my_posts.is_valid():
                 ser_my_posts.save()
                 return Response("Post created", status=HTTP_200_OK)

@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import './AuthPopup.css';
 import Form from "react-bootstrap/Form"
-import { useOutletContext } from 'react-router-dom';
 import { signIn, signUp } from '../utilities';
-import axios from 'axios';
 import { api } from '../utilities';
 
-function AuthPopup({ onClose, setUser, user }) {
+function AuthPopup({ onClose, setUser }) {
     const [isLogin, setIsLogin] = useState(true)
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("")
@@ -19,7 +17,7 @@ function AuthPopup({ onClose, setUser, user }) {
 
     const handleSignUp = async (e) => {
         e.preventDefault()
-        let res = await api.get(`/emailchecker/${email}`)
+        await api.get(`/emailchecker/${email}`)
         setFakeEmail(res.data.disposable)
         if (fakeEmail == false) {
             setUser(await signUp(email, password))
@@ -96,12 +94,6 @@ function AuthPopup({ onClose, setUser, user }) {
                                     placeholder="Password"
                                 />
                             </Form.Group>
-                            {/* <Form.Group className="mb-3" controlId="formBasicPassword">
-                                <Form.Control
-                                    type="password"
-                                    placeholder="Confirm Password"
-                                />
-                            </Form.Group> */}
                             <Form.Group className="newsletter" controlId="formBasicCheckbox">
                                 <Form.Check
                                     type="checkbox"

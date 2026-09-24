@@ -1,10 +1,8 @@
-import React from 'react'
 import { useEffect, useState } from 'react';
 import { api } from '../utilities';
-import { Card, CardBody, InputGroup } from 'react-bootstrap';
+import { Card, InputGroup } from 'react-bootstrap';
 import './Account.css'
 import { Button, Form } from 'react-bootstrap';
-import axios from 'axios';
 
 import 'bootstrap-icons/font/bootstrap-icons.css'
 
@@ -29,14 +27,14 @@ function Account() {
 
     const changeName = async (e) => {
         e.preventDefault()
-        let res = api.put("info/", {display_name: newName})
+        await api.put("info/", {display_name: newName})
         let response = await api.get("info/")
         setUserInfo(response.data)
     }
 
     const changeEmail = async (e) => {
         e.preventDefault()
-        let res = api.put("info/", {email: newEmail})
+        await api.put("info/", {email: newEmail})
         let response = await api.get("info/")
         setUserInfo(response.data)
     }

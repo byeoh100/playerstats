@@ -1,18 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import './Profile.css'
 
 import {
     Button,
     Card,
-    Row,
-    Col,
     Form,
     Spinner
 } from "react-bootstrap";
 
-import Chart from "chart.js/auto"
+import "chart.js/auto"
 import { Line } from "react-chartjs-2"
-import { confirmUser } from '../utilities';
 import { api } from '../utilities';
 import axios from 'axios';
 import playerData from '../assets/players_by_fname.json'
@@ -76,13 +73,6 @@ function Profile() {
         "Washington Wizards": "WAS"
     }
 
-    const dataPull = {
-        "playerName": "Name",
-        "age": "Age",
-        "position": "Position",
-        "games": "GP",
-    }
-
     const FavTeamIcon = NBAIcons[teamAbbrev[favTeam]]
 
     useEffect(() => {
@@ -97,7 +87,7 @@ function Profile() {
                 setFavPlayerInfo(resPlayer.data[resPlayer.data.length - 1])
             }
             catch (err) {
-                console.log(err)
+                console.error(err)
             }
             setFavTeam(response.data.fav_team.team)
             setLoading(false)
@@ -108,36 +98,36 @@ function Profile() {
     const updateFantasyTeam = async (e) => {
         e.preventDefault()
         if (selectedPG != "") {
-            let res = await api.put("/fantasy_team/point_guard/", { point_guard: selectedPG[0] })
+            await api.put("/fantasy_team/point_guard/", { point_guard: selectedPG[0] })
         }
         if (selectedSG != "") {
-            let res = await api.put("/fantasy_team/shooting_guard/", { shooting_guard: selectedSG[0] })
+            await api.put("/fantasy_team/shooting_guard/", { shooting_guard: selectedSG[0] })
         }
         if (selectedSF != "") {
-            let res = await api.put("/fantasy_team/small_forward/", { small_forward: selectedSF[0] })
+            await api.put("/fantasy_team/small_forward/", { small_forward: selectedSF[0] })
         }
         if (selectedPF != "") {
-            let res = await api.put("/fantasy_team/power_forward/", { power_forward: selectedPF[0] })
+            await api.put("/fantasy_team/power_forward/", { power_forward: selectedPF[0] })
         }
         if (selectedC != "") {
-            let res = await api.put("/fantasy_team/center/", { center: selectedC[0] })
+            await api.put("/fantasy_team/center/", { center: selectedC[0] })
         }
         location.reload()
     }
 
     const deletePlayer = async () => {
-        let res = await api.delete("/players/")
+        await api.delete("/players/")
         setFavPlayerID(null)
         setFavPlayerInfo(null)
     }
 
     const deleteTeam = async () => {
-        let res = await api.delete("/teams/")
+        await api.delete("/teams/")
         setFavTeam(null)
     }
 
     const deletePost = async (post_id) => {
-        let res = await api.delete(`posts/${post_id}`)
+        await api.delete(`posts/${post_id}`)
         let response = await api.get("info/");
         setUserInfo(response.data)
     }

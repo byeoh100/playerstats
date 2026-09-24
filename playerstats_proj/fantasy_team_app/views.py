@@ -1,15 +1,12 @@
-from django.shortcuts import render
-from rest_framework.views import APIView
 from .models import Fantasy_team
 from .serializers import FantasyTeamSerializer
 
 from user_app.views import TokenReq
 
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
-from rest_framework.status import HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST, HTTP_201_CREATED, HTTP_200_OK
+from rest_framework.status import HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST, HTTP_200_OK
 
-# Create your views here.
+
 class My_fantasy_team(TokenReq):
     def get(self, request):
         try:
@@ -19,7 +16,6 @@ class My_fantasy_team(TokenReq):
             return Response(e, status=HTTP_400_BAD_REQUEST)
     
     def delete(self, request):
-        data = request.data.copy()
         user_fantasy_team = Fantasy_team.objects.get(user=request.user)
         user_fantasy_team.point_guard = None
         user_fantasy_team.shooting_guard = None
@@ -27,7 +23,7 @@ class My_fantasy_team(TokenReq):
         user_fantasy_team.power_forward = None
         user_fantasy_team.center = None
         user_fantasy_team.save()
-        return Response(f'Fantasy team deleted', status=HTTP_204_NO_CONTENT)
+        return Response('Fantasy team deleted', status=HTTP_204_NO_CONTENT)
     
 class My_fantasy_team_position(TokenReq):
     def get(self, request, position):

@@ -1,14 +1,10 @@
-import React from 'react';
 import './Homepage.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faBars } from '@fortawesome/free-solid-svg-icons'
-import { useOutletContext } from 'react-router-dom';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 
 function Homepage() {
-    const { setUser } = useOutletContext()
-
     const Link = ({ id, children, title }) => (
         <OverlayTrigger overlay={<Tooltip id={id}>{title}</Tooltip>}>
             <a href="javascript:void(0);">{children}</a>

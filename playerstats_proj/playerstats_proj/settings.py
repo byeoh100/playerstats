@@ -25,7 +25,7 @@ EMAIL_CHECK_KEY = env.get('EMAIL_CHECK_KEY')
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-bsq*g+i)^rce1!m&t1vk%p!1_lgm59572@)6*1px@ua&7lfu(r'
+SECRET_KEY = env.get('DJANGO_SECRET_KEY', 'django-insecure-local-dev-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -63,7 +63,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'playerstats_proj.urls'
@@ -117,10 +116,10 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 REST_FRAMEWORK = {
-       'DEFAULT_AUTHENTICATION_CLASSES': [
-           'rest_framework.authentication.TokenAuthentication',
-       ],
-   }
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+}
 
 
 # Internationalization

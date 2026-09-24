@@ -1,6 +1,4 @@
-import React from 'react'
 import { useEffect, useState } from 'react'
-import axios from 'axios'
 import { Card, Spinner } from 'react-bootstrap'
 
 import './GetTeam.css'
@@ -16,11 +14,11 @@ function GetTeam() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        let res = await api.get(`/balldontlie/`)
+        await api.get(`/balldontlie/`)
         setTeams(res.data.data)
       }
       catch {
-        console.log("failed")
+        console.error("Failed to fetch team data")
       }
     }
     fetchData()

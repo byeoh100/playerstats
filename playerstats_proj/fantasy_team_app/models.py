@@ -4,7 +4,7 @@ from user_app.models import User
 
 from fav_player_app.validators import validate_player
 
-# Create your models here.
+
 class Fantasy_team(models.Model):
     point_guard = models.CharField(null=True, validators=[validate_player])
     shooting_guard = models.CharField(null=True, validators=[validate_player])

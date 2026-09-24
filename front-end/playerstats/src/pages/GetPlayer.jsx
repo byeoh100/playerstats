@@ -1,21 +1,14 @@
-import React from 'react'
 import "./GetPlayer.css"
-import { Dropdown, Table } from 'react-bootstrap'
-import TableStats from '../components/TableStats'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
 import {
-	Button,
 	Card,
-	Row,
-	Col,
 	Form,
-	Carousel,
 	Pagination,
-	Spinner
+	Spinner,
+	Table
 } from "react-bootstrap";
-import { CategoryScale } from 'chart.js'
 import { useNavigate } from 'react-router-dom'
 
 function GetPlayer() {
@@ -68,10 +61,9 @@ function GetPlayer() {
 				}
 				setPlayers(allPlayers)
 				setDisplayPlayers(allPlayers)
-				console.log(displayPlayers)
 			}
 			catch {
-				console.log("failed")
+				console.error("Failed to fetch player data")
 			}
 		}
 		fetchData()

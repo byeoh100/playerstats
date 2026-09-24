@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { Chart as ChartJS } from 'chart.js/auto'
+import { useState, useEffect, useRef } from 'react'
+import 'chart.js/auto'
 import { Line } from 'react-chartjs-2'
 
 function LineChart({ pData = null, category }) {
@@ -31,8 +31,6 @@ function LineChart({ pData = null, category }) {
             setPDataset([])
         }
     }, [pData, category])
-
-    console.log(pDataset)
 
     return (
         <Line ref={chartRef}

@@ -1,12 +1,8 @@
-import React from 'react'
 import './Community.css'
 import {
     Button,
     Card,
-    Row,
-    Col,
     Form,
-    Carousel,
     Pagination
 } from "react-bootstrap";
 import { useEffect, useState } from 'react';
@@ -44,7 +40,7 @@ function Community() {
             alert("You need a full team to make a post")
         }
         else {
-            let res = await api.post("/posts/", { fantasy_team: userInfo.fantasy_team })
+            await api.post("/posts/", { fantasy_team: userInfo.fantasy_team })
             let resPost = await api.get("posts/all/")
             setAllPosts(resPost.data)
         }
@@ -52,7 +48,7 @@ function Community() {
 
     const makeComment = async (e, post_id) => {
         e.preventDefault()
-        let res = await api.post(`/posts/${post_id}/comments`, { content: newComment })
+        await api.post(`/posts/${post_id}/comments`, { content: newComment })
         let resPost = await api.get("posts/all/")
         setAllPosts(resPost.data)
     }

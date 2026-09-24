@@ -1,16 +1,12 @@
-from django.shortcuts import render
-from rest_framework.views import APIView
 from .models import Fav_team
 from .serializers import FavTeamSerializer
 
 from user_app.views import TokenReq
 
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
-from rest_framework.status import HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST, HTTP_201_CREATED, HTTP_200_OK
+from rest_framework.status import HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST, HTTP_200_OK
 
 
-# Create your views here.
 class My_fav_team(TokenReq):
     def get(self, request):
         try:
@@ -31,8 +27,7 @@ class My_fav_team(TokenReq):
             return Response(new_user_fav_team.errors, status=HTTP_400_BAD_REQUEST)
     
     def delete(self, request):
-        data = request.data.copy()
         user_fav_team =  Fav_team.objects.get(user=request.user)
         user_fav_team.team = None
         user_fav_team.save()
-        return Response(f'Favorite team deleted', status=HTTP_204_NO_CONTENT)
+        return Response('Favorite team deleted', status=HTTP_204_NO_CONTENT)

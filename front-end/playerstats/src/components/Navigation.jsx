@@ -3,14 +3,11 @@ import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
 import './Navigation.css';
 import { Link } from 'react-router-dom';
-import AuthController from './AuthController';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
-import Col from 'react-bootstrap/Col'
 import Image from 'react-bootstrap/Image'
 import { Dropdown } from 'react-bootstrap'
 
@@ -31,7 +28,7 @@ function NavSearch({ user, setUser }) {
         setIsPopupOpen(false);
     };
 
-    const handleLogOut = async (e) => {
+    const handleLogOut = async () => {
         setUser(await logOut());
         navigate('/')
     };
@@ -100,7 +97,7 @@ function NavSearch({ user, setUser }) {
                     </Container>
                 </Navbar>
             </Container>
-            {isPopupOpen && <AuthPopup onClose={closePopup} setUser={setUser} user={user} />}
+            {isPopupOpen && <AuthPopup onClose={closePopup} setUser={setUser} />}
         </>
     );
 }

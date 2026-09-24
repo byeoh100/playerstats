@@ -1,7 +1,7 @@
 from django.db import models
 from user_app.models import User
 
-# Create your models here.
+
 class Post(models.Model):
     team = models.JSONField() # this should be a list of player names, jsonified into a string
     upvotes = models.PositiveIntegerField(default=0)
